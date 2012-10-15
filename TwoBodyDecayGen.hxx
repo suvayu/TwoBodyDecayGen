@@ -30,15 +30,15 @@ public:
 
   TwoBodyDecayGen(double *daumasses, TwoBodyDecayGen *dau1=NULL,
 		  TwoBodyDecayGen *dau2=NULL) :
-    _decaytree(new TTree("TwoBodyDecayGen_decaytree", "Decay product"
-			 " TLorentzVectors stored in TClonesArray")),
     _generator(TGenPhaseSpace()), _daumasses(daumasses)
   { _daus[0] = dau1; _daus[1] = dau2; }
-    // _daus{dau1, dau2} {}	// c++11 only, compile with -std=c++11 or -std=gnu++11
+    // c++11 only, compile with -std=c++11 or -std=gnu++11
+    // _daus{dau1, dau2} {}
   ~TwoBodyDecayGen() {}
 
-  bool generate(unsigned nevents);
-  TTree* get_tree() { return _decaytree; }
+  double generate(TLorentzVector &momp,
+		  std::vector<TLorentzVector*> &particle_lvs);
+  TTree* get_event_tree(unsigned nevents, TH1 *hpdist=NULL);
 
 private:
 
@@ -47,7 +47,6 @@ private:
    * 
    */
 
-  TTree * _decaytree;
   TGenPhaseSpace _generator;
   double *_daumasses;
   TwoBodyDecayGen *_daus[NDAUS];

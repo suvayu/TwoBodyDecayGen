@@ -14,26 +14,55 @@
 #include "TwoBodyDecayGen.hxx"
 
 
-bool TwoBodyDecayGen::generate(unsigned nevents)
+double TwoBodyDecayGen::generate(TLorentzVector &momp,
+				 std::vector<TLorentzVector*> &particle_lvs)
 {
-  TClonesArray dau_lvs(TLorentzVector::Class());
-  double evt_wt(1.0);
-  _decaytree->Branch("dau_lvs", &dau_lvs);
-  _decaytree->Branch("evt_wt", &evt_wt, "evt_wt/D");
+  // setup decay and generate
+  _generator.SetDecay(momp, NDAUS, _daumasses);
+  double evt_wt = _generator.Generate();
 
-  // set generator
-  TLorentzVector initial_lv(0.0, 0.0, 4.0, 5.367);
-  _generator.SetDecay(initial_lv, NDAUS, _daumasses);
-
-  for (unsigned i = 0; i < nevents; ++i) {
-    dau_lvs.Clear();
-    evt_wt = _generator.Generate();
-    for (unsigned j = 0; j < NDAUS; ++j) {
-      TLorentzVector *temp = _generator.GetDecay(j);
-      new(dau_lvs[j]) TLorentzVector(*temp);
-    }
-    _decaytree->Fill();
+  // retrieve decays
+  for (unsigned j = 0; j < NDAUS; ++j) {
+    particle_lvs.push_back(_generator.GetDecay(j));
   }
 
-  return true;
+  for (unsigned j = 0; j < NDAUS; ++j) {
+    if (_daus[j]) {
+      // FIXME: Assumption: particle_lvs is of size 2
+      evt_wt += _daus[j]->generate(*particle_lvs[j], particle_lvs);
+      evt_wt /= 2.0;
+    } // FIXME: the handling of weights is probably wrong
+  }
+
+  return evt_wt;
+}
+
+
+TTree* TwoBodyDecayGen::get_event_tree(unsigned nevents, TH1 *hpdist)
+{
+  std::vector<TLorentzVector*> particle_lvs;
+  double evt_wt(1.0);
+
+  TTree *decaytree =
+    new TTree("TwoBodyDecayGen_decaytree", "Vector of decay product "
+	      "TLorentzVectors");
+  decaytree->Branch("particle_lvs", &particle_lvs);
+  decaytree->Branch("evt_wt", &evt_wt, "evt_wt/D");
+
+  for (unsigned i = 0; i < nevents; ++i) {
+    particle_lvs.clear();
+
+    // generate initial mother 4-momenta
+    TLorentzVector momp(0.0, 0.0, 0.0, 0.0);
+    if (NULL == hpdist) {
+      momp.SetXYZM(0.0, 0.0, 4.0, 5.367);
+    } else {
+    }
+
+    // generate event and fill tree
+    evt_wt = this->generate(momp, particle_lvs);
+    decaytree->Fill();
+  }
+
+  return decaytree;
 }
