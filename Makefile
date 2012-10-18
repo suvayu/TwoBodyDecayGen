@@ -10,12 +10,13 @@
 ROOTINCLUDE	   := $(shell root-config --incdir)
 ROOTCFLAGS := $(shell root-config --cflags)
 ROOTLIBS   := $(shell root-config --libs)
+ROOFITLIBS := -lRooFitCore -lRooFit
 
 .PHONY.:	clean
 
 # Use -std=c++11 if using new initialiser
 generator:	stdvectorDict.cxx main.cc TwoBodyDecayGen.cxx
-	g++ -Wall -g $(ROOTCFLAGS) $(ROOTLIBS) $^ -o $@
+	g++ -Wall -g $(ROOTCFLAGS) $(ROOTLIBS) $(ROOFITLIBS) $^ -o $@
 
 stdvectorDict.cxx:	stdvectorLinkDef.h
 	rootcint -f $@ -c -p $^
