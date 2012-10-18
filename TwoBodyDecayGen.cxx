@@ -2,11 +2,13 @@
  * @file   TwoBodyDecayGen.cxx
  * @author Suvayu Ali <Suvayu.Ali@cern.ch>
  * @date   Thu Oct 11 13:45:20 2012
- * 
+ *
  * @brief  Implementation of TwoBodyDecayGen
- * 
- * 
+ *
+ *
  */
+
+#include <iostream>
 
 #include <TClonesArray.h>
 #include <TLorentzVector.h>
@@ -38,7 +40,7 @@ double TwoBodyDecayGen::generate(TLorentzVector &momp,
 }
 
 
-TTree* TwoBodyDecayGen::get_event_tree(unsigned nevents, TH1 *hpdist)
+TTree* TwoBodyDecayGen::get_event_tree(unsigned nevents, TTree *tmomp)
 {
   std::vector<TLorentzVector*> particle_lvs;
   double evt_wt(1.0);
@@ -49,14 +51,30 @@ TTree* TwoBodyDecayGen::get_event_tree(unsigned nevents, TH1 *hpdist)
   decaytree->Branch("particle_lvs", &particle_lvs);
   decaytree->Branch("evt_wt", &evt_wt, "evt_wt/D");
 
+  TLorentzVector momp(0.0, 0.0, 4.0, 5.367);
+  double momentum(0.0);
+
+  if (tmomp) {
+    unsigned tentries(tmomp->GetEntries());
+    if (tentries <= 0) {
+      std::cout << "Empty try was passed, events won't be generated."
+		<< std::endl;
+      return NULL;
+    }
+    if (tentries < nevents) {
+      nevents = tentries;
+      std::cout << "Not enough entries in tree, will generate "
+		<< nevents << " events.";
+    }
+    tmomp->Branch("momentum", &momentum);
+  }
+
   for (unsigned i = 0; i < nevents; ++i) {
     particle_lvs.clear();
 
-    // generate initial mother 4-momenta
-    TLorentzVector momp(0.0, 0.0, 0.0, 0.0);
-    if (NULL == hpdist) {
-      momp.SetXYZM(0.0, 0.0, 4.0, 5.367);
-    } else {
+    if (tmomp) {
+      tmomp->GetEntry(i);
+      momp.SetXYZM( 0.0, 0.0, momentum, 5.367);
     }
 
     // generate event and fill tree

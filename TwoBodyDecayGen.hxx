@@ -2,10 +2,10 @@
  * @file   TwoBodyDecayGen.hxx
  * @author Suvayu Ali <Suvayu.Ali@cern.ch>
  * @date   Wed Oct 10 22:39:13 2012
- * 
+ *
  * @brief  This class implements an interface to generate 2-body decays
- * 
- * 
+ *
+ *
  */
 
 #ifndef TWOBODYDECAYGEN_HXX
@@ -24,8 +24,8 @@ class TwoBodyDecayGen {
 public:
 
   /**
-   * 
-   * 
+   *
+   *
    */
 
   TwoBodyDecayGen(double *daumasses, TwoBodyDecayGen *dau1=NULL,
@@ -38,13 +38,13 @@ public:
 
   double generate(TLorentzVector &momp,
 		  std::vector<TLorentzVector*> &particle_lvs);
-  TTree* get_event_tree(unsigned nevents, TH1 *hpdist=NULL);
+  TTree* get_event_tree(unsigned nevents, TTree *tmomp=NULL);
 
 private:
 
   /**
-   * 
-   * 
+   *
+   *
    */
 
   TGenPhaseSpace _generator;
