@@ -13,14 +13,24 @@
 #include <RooRealVar.h>
 #include <RooArgSet.h>
 #include <RooArgList.h>
+#include <RooPlot.h>
 
 #include "TwoBodyDecayGen.hxx"
 
 
+void usage(char * prog)
+{
+  std::cout << "Usage: $ " << prog << " <nevents> <mode>"
+    " # args are case sensitive" << std::endl;
+}
+
+
 int main(int argc, char* argv[])
 {
+  // program arguments
   if (argc > 3) {
     std::cout << "Too many arguments!" << std::endl;
+    usage(argv[0]);
     return -1;
   }
 
@@ -31,17 +41,21 @@ int main(int argc, char* argv[])
     mode = argv[2];
   } else {
     std::cout << "Not enough arguments!" << std::endl;
+    usage(argv[0]);
     return -1;
   }
 
+  // read ntuple from file
   std::string fname = "smalltree-" + mode + ".root";
   TFile infile(fname.c_str(), "read");
   TTree *intree = dynamic_cast<TTree*>(infile.Get("ftree"));
-  
+
+  // get B momentum distribution
   TH1D hmomp("hmomp", "", 100, 0.0, 300.0);
   intree->Draw("1E-3*BsMom.P()>>hmomp");
   gPad->Print("Bs_mom.png");
 
+  // make dataset from histogram
   RooRealVar momentum("momentum", "momentum", 0.0, 300.0);
   RooDataHist datahist("datahist", "datahist", RooArgList(momentum), &hmomp);
   RooHistPdf histpdf("histpdf", "histpdf", RooArgSet(momentum), datahist);
@@ -49,30 +63,36 @@ int main(int argc, char* argv[])
 					 RooFit::NumEvents(nevents),
 					 RooFit::AutoBinned(false));
 
+  // xcheck: plot generated B momenta
+  RooPlot *momframe = momentum.frame();
+  dataset->plotOn(momframe);
+  momframe->Draw();
+  gPad->Print("Bs_mom_gen.png");
+
+  // ROOT file dump
+  TFile *file = new TFile("eventtree.root", "recreate");
+  file->cd();
+
+  // fill tree from dataset
   double mom(0.0);
   TTree* momtree = new TTree("momtree", "");
   momtree->Branch("momentum", &mom);
-
-  std::cout << dataset->numEntries() << " events generated." << std::endl;
   for (int i = 0; i < nevents; ++i) {
     const RooArgSet *entry = dataset->get(i);
     mom = entry->getRealValue("momentum");
     momtree->Fill();
   }
 
+  // generator config
   double masses[NDAUS] = {1.968, 0.494};
   TwoBodyDecayGen generator(masses);
 
-  TFile file("eventtree.root", "recreate");
-  file.cd();
-
-  TTree* eventtree = generator.get_event_tree(nevents, momtree);
-  std::cout << eventtree->GetEntries() << " events generated" << std::endl;
-  // eventtree->Scan("evt_wt");
+  // generate, print summary and dump to ROOT file
+  TTree* eventtree = generator.get_event_tree(nevents, momtree, mom);
   eventtree->Print("all");
-
-  file.WriteTObject(eventtree);
-  file.Close();
+  file->WriteTObject(momtree);
+  file->WriteTObject(eventtree);
+  file->Close();
 
   return 0;
 }
