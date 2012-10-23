@@ -22,8 +22,11 @@ stdvectorDict.cxx:	stdvectorLinkDef.h
 	rootcint -f $@ -c -p $^
 	grep include $^ > tmpdict && cat $@ >> tmpdict && mv tmpdict $@
 
+test:	test.cc
+	g++ -Wall -g $(ROOTCFLAGS) $(ROOTLIBS) $^ -o $@
+
 clean:
-	rm -rf generator stdvectorDict.{h,cxx}
+	rm -rf generator stdvectorDict.{h,cxx} test
 
 # libPhaseSpaceGen.so:
 # rootcint -f ${TGT} -c -p ${CXXFLAGS} ${ROOTCINT_INCLUDES} ${SRC};
