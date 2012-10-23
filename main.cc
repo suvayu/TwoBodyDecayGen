@@ -51,13 +51,21 @@ int main(int argc, char* argv[])
   TTree *intree = dynamic_cast<TTree*>(infile.Get("ftree"));
 
   // get B momentum distribution
-  TH1D hmomp("hmomp", "", 100, 0.0, 300.0);
-  intree->Draw("1E-3*BsMom.P()>>hmomp");
+  TH1D Bsmomp("Bsmomp", "", 100, 0.0, 300.0);
+  intree->Draw("1E-3*BsMom.P()>>Bsmomp");
   gPad->Print("Bs_mom.png");
+
+  TH1D dau1momp("dau1momp", "", 100, 0.0, 300.0);
+  intree->Draw("1E-3*DsMom.P()>>dau1momp");
+  gPad->Print("dau1_mom.png");
+
+  TH1D dau2momp("dau2momp", "", 100, 0.0, 300.0);
+  intree->Draw("1E-3*hMom.P()>>dau2momp");
+  gPad->Print("dau2_mom.png");
 
   // make dataset from histogram
   RooRealVar momentum("momentum", "momentum", 0.0, 300.0);
-  RooDataHist datahist("datahist", "datahist", RooArgList(momentum), &hmomp);
+  RooDataHist datahist("datahist", "datahist", RooArgList(momentum), &Bsmomp);
   RooHistPdf histpdf("histpdf", "histpdf", RooArgSet(momentum), datahist);
   RooDataSet *dataset = histpdf.generate(RooArgSet(momentum),
 					 RooFit::NumEvents(nevents),
