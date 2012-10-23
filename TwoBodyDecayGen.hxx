@@ -14,6 +14,7 @@
 #include <string>
 #include <vector>
 
+#include <TLorentzVector.h>
 #include <TTree.h>
 #include <TGenPhaseSpace.h>
 
@@ -37,8 +38,8 @@ public:
   ~TwoBodyDecayGen() {}
 
   double generate(TLorentzVector &momp,
-		  std::vector<TLorentzVector*> &particle_lvs);
-  TTree* get_event_tree(unsigned nevents, TTree *tmomp=NULL);
+		  std::vector<TLorentzVector> &particle_lvs);
+  TTree* get_event_tree(unsigned nevents, TTree *tmomp, double &momentum);
 
 private:
 
