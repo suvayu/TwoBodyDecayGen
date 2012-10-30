@@ -10,6 +10,8 @@
 
 #include <iostream>
 
+#include <TRandom3.h>
+
 #include "TwoBodyDecayGen.hxx"
 
 
@@ -37,7 +39,7 @@ double TwoBodyDecayGen::generate(TLorentzVector &momp,
 }
 
 
-TTree* TwoBodyDecayGen::get_event_tree(unsigned nevents, TTree *tmomp, double &momentum)
+TTree* TwoBodyDecayGen::get_event_tree(unsigned nevents, TH1 *hmomp)
 {
   std::vector<TLorentzVector> particle_lvs;
   double evt_wt(1.0);
@@ -48,27 +50,16 @@ TTree* TwoBodyDecayGen::get_event_tree(unsigned nevents, TTree *tmomp, double &m
   decaytree->Branch("particle_lvs", &particle_lvs);
   decaytree->Branch("evt_wt", &evt_wt, "evt_wt/D");
 
-  TLorentzVector momp(0.0, 0.0, 4.0, 5.367);
-  unsigned tentries(tmomp->GetEntries());
-  if (tentries <= 0) {
-    std::cout << "Empty tree was passed, events won't be generated."
-	      << std::endl;
-    return NULL;
-  }
-  if (tentries < nevents) {
-    nevents = tentries;
-    std::cout << "Not enough entries in tree, will generate "
-	      << nevents << " events." << std::endl;
-  }
-  std::cout << "Will generate " << nevents << " events." << std::endl;
+  // Reset gRandom to TRandom3
+  gRandom = new TRandom3();
+  std::cout << "Generating " << nevents << " events." << std::endl;
 
+  TLorentzVector momp(0.0, 0.0, 4.0, _mommass);
   for (unsigned i = 0; i < nevents; ++i) {
     particle_lvs.clear();
 
-    tmomp->GetEntry(i);
-    momp.SetXYZM( 0.0, 0.0, momentum, 5.367);
-
     // generate event and fill tree
+    momp.SetXYZM( 0.0, 0.0, hmomp->GetRandom(), 5.367);
     particle_lvs.push_back(momp);
     evt_wt = this->generate(momp, particle_lvs);
     decaytree->Fill();

@@ -14,8 +14,9 @@
 #include <string>
 #include <vector>
 
-#include <TLorentzVector.h>
+#include <TH1.h>
 #include <TTree.h>
+#include <TLorentzVector.h>
 #include <TGenPhaseSpace.h>
 
 #define NDAUS 2
@@ -29,9 +30,10 @@ public:
    *
    */
 
-  TwoBodyDecayGen(double *daumasses, TwoBodyDecayGen *dau1=NULL,
+  TwoBodyDecayGen(double mommass, double *daumasses,
+		  TwoBodyDecayGen *dau1=NULL,
 		  TwoBodyDecayGen *dau2=NULL) :
-    _generator(TGenPhaseSpace()), _daumasses(daumasses)
+    _generator(TGenPhaseSpace()), _mommass(mommass), _daumasses(daumasses)
   { _daus[0] = dau1; _daus[1] = dau2; }
     // c++11 only, compile with -std=c++11 or -std=gnu++11
     // _daus{dau1, dau2} {}
@@ -39,7 +41,7 @@ public:
 
   double generate(TLorentzVector &momp,
 		  std::vector<TLorentzVector> &particle_lvs);
-  TTree* get_event_tree(unsigned nevents, TTree *tmomp, double &momentum);
+  TTree* get_event_tree(unsigned nevents, TH1 *hmomp);
 
 private:
 
@@ -49,6 +51,7 @@ private:
    */
 
   TGenPhaseSpace _generator;
+  double _mommass;
   double *_daumasses;
   TwoBodyDecayGen *_daus[NDAUS];
 };
