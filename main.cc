@@ -7,15 +7,14 @@
 #include <TTree.h>
 #include <TPad.h>
 
-#include <RooDataSet.h>
-#include <RooDataHist.h>
-#include <RooHistPdf.h>
-#include <RooRealVar.h>
-#include <RooArgSet.h>
-#include <RooArgList.h>
-#include <RooPlot.h>
-
 #include "TwoBodyDecayGen.hxx"
+
+
+// some constants
+static const double BSMASS(5366.3), DSMASS(1968.49), KMASS(493.677),
+  BDMASS(5279.53), DMASS(1869.62), PIMASS(139.57018), DSSTMASS(2112.34),
+  KSTMASS(891.66), LBMASS(5620.2), LCMASS(2286.46), PMASS(938.27203);
+  /*, RHOMASS(775.49), DSTMASS(2010.25), DSTMASS2(2460.1);*/
 
 
 void usage(char * prog)
@@ -50,55 +49,32 @@ int main(int argc, char* argv[])
   TFile infile(fname.c_str(), "read");
   TTree *intree = dynamic_cast<TTree*>(infile.Get("ftree"));
 
-  // get B momentum distribution
+  // make dataset from histogram
   TH1D Bsmomp("Bsmomp", "", 100, 0.0, 300.0);
   intree->Draw("1E-3*BsMom.P()>>Bsmomp");
-  gPad->Print("Bs_mom.png");
-
-  TH1D dau1momp("dau1momp", "", 100, 0.0, 300.0);
-  intree->Draw("1E-3*DsMom.P()>>dau1momp");
-  gPad->Print("dau1_mom.png");
-
-  TH1D dau2momp("dau2momp", "", 100, 0.0, 300.0);
-  intree->Draw("1E-3*hMom.P()>>dau2momp");
-  gPad->Print("dau2_mom.png");
-
-  // make dataset from histogram
-  RooRealVar momentum("momentum", "momentum", 0.0, 300.0);
-  RooDataHist datahist("datahist", "datahist", RooArgList(momentum), &Bsmomp);
-  RooHistPdf histpdf("histpdf", "histpdf", RooArgSet(momentum), datahist);
-  RooDataSet *dataset = histpdf.generate(RooArgSet(momentum),
-					 RooFit::NumEvents(nevents),
-					 RooFit::AutoBinned(false));
-
-  // xcheck: plot generated B momenta
-  RooPlot *momframe = momentum.frame();
-  dataset->plotOn(momframe);
-  momframe->Draw();
-  gPad->Print("Bs_mom_gen.png");
+  gPad->Print("Bs_mom_template.png");
 
   // ROOT file dump
-  TFile *file = new TFile("eventtree.root", "recreate");
+  fname = "eventtree-" + mode + ".root";
+  TFile *file = new TFile(fname.c_str(), "recreate");
   file->cd();
 
-  // fill tree from dataset
-  double mom(0.0);
-  TTree* momtree = new TTree("momtree", "");
-  momtree->Branch("momentum", &mom);
-  for (int i = 0; i < nevents; ++i) {
-    const RooArgSet *entry = dataset->get(i);
-    mom = entry->getRealValue("momentum");
-    momtree->Fill();
+  // generator config
+  double Bmasses[NDAUS] = {1.968, 0.494}; // DsK
+  if ("DsPi" == mode or "DsstPi" == mode) Bmasses[1] = PIMASS * 1E-3; // Pi
+
+  double Dsstmasses[NDAUS] = {0.0, 0.0}; // 0 for gamma
+  if ("DsstPi" == mode) {
+    Bmasses[0] = DSSTMASS * 1E-3; // DsstPi
+    Dsstmasses[0] = DSMASS * 1E-3; // Dsgamma
   }
 
-  // generator config
-  double masses[NDAUS] = {1.968, 0.494};
-  TwoBodyDecayGen generator(masses);
+  TwoBodyDecayGen stgen(DSSTMASS * 1E-3, Dsstmasses);
+  TwoBodyDecayGen generator(BSMASS * 1E-3, Bmasses, &stgen);
 
   // generate, print summary and dump to ROOT file
-  TTree* eventtree = generator.get_event_tree(nevents, momtree, mom);
+  TTree* eventtree = generator.get_event_tree(nevents, &Bsmomp);
   eventtree->Print("all");
-  file->WriteTObject(momtree);
   file->WriteTObject(eventtree);
   file->Close();
 
