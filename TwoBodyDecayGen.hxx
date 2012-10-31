@@ -37,6 +37,7 @@ public:
   { _daus[0] = dau1; _daus[1] = dau2; }
     // c++11 only, compile with -std=c++11 or -std=gnu++11
     // _daus{dau1, dau2} {}
+  TwoBodyDecayGen(double *masses, unsigned nparts);
   ~TwoBodyDecayGen() {}
 
   double generate(TLorentzVector &momp,

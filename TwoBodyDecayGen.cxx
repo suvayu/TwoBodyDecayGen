@@ -15,11 +15,32 @@
 #include "TwoBodyDecayGen.hxx"
 
 
+TwoBodyDecayGen::TwoBodyDecayGen(double *masses, unsigned nparts) :
+  _generator(TGenPhaseSpace()), _mommass(masses[0])
+{
+  if (nparts > 7) {
+    std::cout << "Greater than two levels of decay is not supported. "
+      " Expect the unexpected!" << std::endl;
+  }
+  unsigned decay_verts((nparts - 1) / 2);
+  for (unsigned i = 0; i < decay_verts; ++i) {
+    double daumasses[NDAUS] = {masses[2*i + 1], masses[2*i + 2]};
+    if (0 == i) {
+      _daumasses = daumasses;
+    } else {
+      _daus[i] = new TwoBodyDecayGen(masses[i], daumasses);
+    }
+  }
+}
+
+
 double TwoBodyDecayGen::generate(TLorentzVector &momp,
 				 std::vector<TLorentzVector> &particle_lvs)
 {
   // setup decay and generate
-  _generator.SetDecay(momp, NDAUS, _daumasses);
+  if (not _generator.SetDecay(momp, NDAUS, _daumasses)) {
+    return -1.0;
+  }
   double evt_wt = _generator.Generate();
 
   // retrieve decays
@@ -62,6 +83,11 @@ TTree* TwoBodyDecayGen::get_event_tree(unsigned nevents, TH1 *hmomp)
     momp.SetXYZM( 0.0, 0.0, hmomp->GetRandom(), 5.367);
     particle_lvs.push_back(momp);
     evt_wt = this->generate(momp, particle_lvs);
+    if (evt_wt < 0) {
+      std::cout << "Decay not permitted by kinematics, skipping!"
+		<< std::endl;
+      continue;
+    }
     decaytree->Fill();
   }
 
