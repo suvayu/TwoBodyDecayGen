@@ -22,7 +22,7 @@ stdvectorDict.cxx:	stdvectorLinkDef.h
 	rootcint -f $@ -c -p $^
 	grep include $^ > tmpdict && cat $@ >> tmpdict && mv tmpdict $@
 
-test:	test.cc
+test:	stdvectorDict.cxx test.cc
 	g++ -Wall -g $(ROOTCFLAGS) $(ROOTLIBS) $^ -o $@
 
 clean:
