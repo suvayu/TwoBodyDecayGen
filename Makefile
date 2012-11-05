@@ -25,6 +25,9 @@ stdvectorDict.cxx:	stdvectorLinkDef.h
 test:	stdvectorDict.cxx test.cc
 	g++ -Wall -g $(ROOTCFLAGS) $(ROOTLIBS) $^ -o $@
 
+testpartial:	stdvectorDict.cxx testpartial.cc
+	g++ -Wall -g $(ROOTCFLAGS) $(ROOTLIBS) $^ -o $@
+
 clean:
 	rm -rf generator stdvectorDict.{h,cxx} test
 
