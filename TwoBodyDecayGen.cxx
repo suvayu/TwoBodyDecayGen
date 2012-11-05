@@ -63,8 +63,6 @@ TwoBodyDecayGen::TwoBodyDecayGen(double *masses, unsigned nparts) :
 double TwoBodyDecayGen::generate(TLorentzVector &momp,
 				 std::vector<TLorentzVector> &particle_lvs)
 {
-  // std::cout << "Test: " << _daumasses << " (" << _daumasses[0] << ","
-  // 	    << _daumasses[1] << ")" << std::endl;
   // setup decay and generate
   if (not _generator.SetDecay(momp, NDAUS, _daumasses)) {
     return -1.0;
