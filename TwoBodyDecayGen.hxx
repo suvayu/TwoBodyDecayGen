@@ -30,11 +30,12 @@ public:
    *
    */
 
+  TwoBodyDecayGen(double mommass, double dau1mass, double dau2mass,
+		  TwoBodyDecayGen *dau1=NULL,
+		  TwoBodyDecayGen *dau2=NULL);
   TwoBodyDecayGen(double mommass, double *daumasses,
 		  TwoBodyDecayGen *dau1=NULL,
-		  TwoBodyDecayGen *dau2=NULL) :
-    _generator(TGenPhaseSpace()), _mommass(mommass), _daumasses(daumasses)
-  { _daus[0] = dau1; _daus[1] = dau2; }
+		  TwoBodyDecayGen *dau2=NULL);
     // c++11 only, compile with -std=c++11 or -std=gnu++11
     // _daus{dau1, dau2} {}
   TwoBodyDecayGen(double *masses, unsigned nparts);
@@ -43,6 +44,8 @@ public:
   double generate(TLorentzVector &momp,
 		  std::vector<TLorentzVector> &particle_lvs);
   TTree* get_event_tree(unsigned nevents, TH1 *hmomp);
+
+  void Print();
 
 private:
 
@@ -53,7 +56,7 @@ private:
 
   TGenPhaseSpace _generator;
   double _mommass;
-  double *_daumasses;
+  double _daumasses[NDAUS];
   TwoBodyDecayGen *_daus[NDAUS];
 };
 

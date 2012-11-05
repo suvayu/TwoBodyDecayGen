@@ -15,6 +15,32 @@
 #include "TwoBodyDecayGen.hxx"
 
 
+TwoBodyDecayGen::TwoBodyDecayGen(double mommass,
+				 double dau1mass,
+				 double dau2mass,
+				 TwoBodyDecayGen *dau1,
+				 TwoBodyDecayGen *dau2) :
+  _generator(TGenPhaseSpace()), _mommass(mommass)
+{
+  _daumasses[0] = dau1mass;
+  _daumasses[1] = dau2mass;
+  _daus[0] = dau1;
+  _daus[1] = dau2;
+}
+
+
+TwoBodyDecayGen::TwoBodyDecayGen(double mommass, double *daumasses,
+				 TwoBodyDecayGen *dau1,
+				 TwoBodyDecayGen *dau2) :
+  _generator(TGenPhaseSpace()), _mommass(mommass)//, _daumasses(daumasses)
+{
+  _daumasses[0] = daumasses[0];
+  _daumasses[1] = daumasses[1];
+  _daus[0] = dau1;
+  _daus[1] = dau2;
+}
+
+
 TwoBodyDecayGen::TwoBodyDecayGen(double *masses, unsigned nparts) :
   _generator(TGenPhaseSpace()), _mommass(masses[0])
 {
@@ -22,13 +48,13 @@ TwoBodyDecayGen::TwoBodyDecayGen(double *masses, unsigned nparts) :
     std::cout << "Greater than two levels of decay is not supported. "
       " Expect the unexpected!" << std::endl;
   }
-  unsigned decay_verts((nparts - 1) / 2);
-  for (unsigned i = 0; i < decay_verts; ++i) {
+  for (unsigned i = 0; i < nparts - 2; ++i) {
     double daumasses[NDAUS] = {masses[2*i + 1], masses[2*i + 2]};
     if (0 == i) {
-      _daumasses = daumasses;
+      _daumasses[0] = daumasses[0];
+      _daumasses[1] = daumasses[1];
     } else {
-      _daus[i] = new TwoBodyDecayGen(masses[i], daumasses);
+      _daus[i-1] = new TwoBodyDecayGen(masses[i], daumasses[0], daumasses[1]);
     }
   }
 }
@@ -37,6 +63,8 @@ TwoBodyDecayGen::TwoBodyDecayGen(double *masses, unsigned nparts) :
 double TwoBodyDecayGen::generate(TLorentzVector &momp,
 				 std::vector<TLorentzVector> &particle_lvs)
 {
+  // std::cout << "Test: " << _daumasses << " (" << _daumasses[0] << ","
+  // 	    << _daumasses[1] << ")" << std::endl;
   // setup decay and generate
   if (not _generator.SetDecay(momp, NDAUS, _daumasses)) {
     return -1.0;
@@ -92,4 +120,18 @@ TTree* TwoBodyDecayGen::get_event_tree(unsigned nevents, TH1 *hmomp)
   }
 
   return decaytree;
+}
+
+
+void TwoBodyDecayGen::Print() {
+  std::cout << "mommass: " << _mommass << ", daumass: ("
+	      << _daumasses[0] << "," << _daumasses[1] << ")"
+	      << std::endl;
+  for (unsigned j = 0; j < NDAUS; ++j) {
+    if (_daus[j]) {
+      std::cout << __func__ << ": Dau " << j << std::endl;
+      _daus[j]->Print();
+    }
+  }
+  return;
 }
