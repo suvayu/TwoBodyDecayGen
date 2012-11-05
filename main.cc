@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <cassert>
+#include <vector>
 
 #include <TFile.h>
 #include <TH1D.h>
@@ -60,17 +61,34 @@ int main(int argc, char* argv[])
   file->cd();
 
   // generator config
-  double Bmasses[NDAUS] = {1.968, 0.494}; // DsK
-  if ("DsPi" == mode or "DsstPi" == mode) Bmasses[1] = PIMASS * 1E-3; // Pi
+  // double Bmasses[NDAUS] = {1.968, 0.494}; // DsK
+  // if ("DsPi" == mode or "DsstPi" == mode) Bmasses[1] = PIMASS * 1E-3; // Pi
 
-  double Dsstmasses[NDAUS] = {0.0, 0.0}; // 0 for gamma
-  if ("DsstPi" == mode) {
-    Bmasses[0] = DSSTMASS * 1E-3; // DsstPi
-    Dsstmasses[0] = DSMASS * 1E-3; // Dsgamma
+  // double Dsstmasses[NDAUS] = {0.0, 0.0}; // 0 for gamma
+  // if ("DsstPi" == mode) {
+  //   Bmasses[0] = DSSTMASS * 1E-3; // DsstPi
+  //   Dsstmasses[0] = DSMASS * 1E-3; // Dsgamma
+  // }
+
+  // TwoBodyDecayGen stgen(DSSTMASS * 1E-3, Dsstmasses);
+  // TwoBodyDecayGen generator(BSMASS * 1E-3, Bmasses, &stgen);
+  std::vector<double> masses;
+  masses.push_back(BSMASS * 1E-3);
+  if ("DsK" == mode) {
+    masses.push_back(DSMASS * 1E-3);
+    masses.push_back(KMASS * 1E-3);
+  } else if ("DsPi" == mode) {
+    masses.push_back(DSMASS * 1E-3);
+    masses.push_back(PIMASS * 1E-3);
+  } else if ("DsstPi" == mode) {
+    masses.push_back(DSSTMASS * 1E-3);
+    masses.push_back(PIMASS * 1E-3);
+    masses.push_back(DSMASS * 1E-3);
+    masses.push_back(0.0);
   }
 
-  TwoBodyDecayGen stgen(DSSTMASS * 1E-3, Dsstmasses);
-  TwoBodyDecayGen generator(BSMASS * 1E-3, Bmasses, &stgen);
+  TwoBodyDecayGen generator(&masses[0], masses.size());
+  generator.Print();
 
   // generate, print summary and dump to ROOT file
   TTree* eventtree = generator.get_event_tree(nevents, &Bsmomp);
