@@ -29,7 +29,7 @@ testpartial:	stdvectorDict.cxx testpartial.cc
 	g++ -Wall -g $(ROOTCFLAGS) $(ROOTLIBS) $^ -o $@
 
 clean:
-	rm -rf generator stdvectorDict.{h,cxx} test
+	rm -rf generator stdvectorDict.{h,cxx} test testpartial
 
 # libPhaseSpaceGen.so:
 # rootcint -f ${TGT} -c -p ${CXXFLAGS} ${ROOTCINT_INCLUDES} ${SRC};
