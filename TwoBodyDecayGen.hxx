@@ -45,6 +45,9 @@
 class TwoBodyDecayGen {
 public:
 
+  typedef std::pair<std::vector<TwoBodyDecayGen*>, double> DauNode;
+  typedef std::vector<DauNode> DauNodeVec;
+
   /**
    * Constructor 1
    *
@@ -130,7 +133,7 @@ private:
   TGenPhaseSpace _generator;	/**< Generator for the current decay vertex */
   double _mommass;		/**< Mother particle mass for the current decay vertex */
   double _daumasses[NDAUS];	/**< Array of the two daughter masses */
-  TwoBodyDecayGen *_daus[NDAUS]; /**< Pointer to subsequent decay vertices */
+  DauNodeVec _dauchannels;
 };
 
 #endif	// TWOBODYDECAYGEN_HXX

@@ -24,8 +24,13 @@ TwoBodyDecayGen::TwoBodyDecayGen(double mommass,
 {
   _daumasses[0] = dau1mass;
   _daumasses[1] = dau2mass;
-  _daus[0] = dau1;
-  _daus[1] = dau2;
+
+  std::vector<TwoBodyDecayGen*> daus(2, NULL);
+  daus[0] = dau1;
+  daus[1] = dau2;
+
+  DauNode priNode(daus, 1.0);
+  _dauchannels.push_back(priNode);
 }
 
 
@@ -36,8 +41,13 @@ TwoBodyDecayGen::TwoBodyDecayGen(double mommass, double *daumasses,
 {
   _daumasses[0] = daumasses[0];
   _daumasses[1] = daumasses[1];
-  _daus[0] = dau1;
-  _daus[1] = dau2;
+
+  std::vector<TwoBodyDecayGen*> daus(2, NULL);
+  daus[0] = dau1;
+  daus[1] = dau2;
+
+  DauNode priNode(daus, 1.0);
+  _dauchannels.push_back(priNode);
 }
 
 
@@ -51,12 +61,17 @@ TwoBodyDecayGen::TwoBodyDecayGen(double *masses, unsigned nparts) :
   for (unsigned i = 0; i < nparts - 2; ++i) {
     if (masses[i] < 0.0) continue;
     double daumasses[NDAUS] = {masses[2*i + 1], masses[2*i + 2]};
+    std::vector<TwoBodyDecayGen*> daus(2, NULL);
+
     if (0 == i) {
       _daumasses[0] = daumasses[0];
       _daumasses[1] = daumasses[1];
     } else {
-      _daus[i-1] = new TwoBodyDecayGen(masses[i], daumasses[0], daumasses[1]);
+      daus[i-1] = new TwoBodyDecayGen(masses[i], daumasses[0], daumasses[1]);
     }
+
+    DauNode priNode(daus, 1.0);
+    _dauchannels.push_back(priNode);
   }
 }
 
