@@ -19,7 +19,7 @@ static const double BSMASS(5366.3), DSMASS(1968.49), KMASS(493.677),
   /*, RHOMASS(775.49), DSTMASS(2010.25), DSTMASS2(2460.1);*/
 
 
-int kfactorp(TTree *intree, TTree *outtree);
+int kfactorp(TTree *outtree);
 
 
 int main(int argc, char* argv[])
@@ -64,7 +64,7 @@ int main(int argc, char* argv[])
 }
 
 
-int kfactorp(TTree *intree, TTree *outtree)
+int kfactorp(TTree *outtree)
 {
   std::vector<TLorentzVector> *particle_lvs = NULL;
   TLorentzVector BsMom(0.0, 0.0, 0.0, 0.0);

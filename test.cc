@@ -123,7 +123,7 @@ int kfactorp(TTree *intree, TTree *outtree)
     kfactorm = tru_BsMom->M() / Bs_rec.M();
     kfactorpm = kfactorp * kfactorm;
 
-    kfactorMC.Fill(kfactorm);
+    kfactorMC.Fill(kfactorpm);
   }
 
   std::vector<TLorentzVector> *particle_lvs = NULL;
