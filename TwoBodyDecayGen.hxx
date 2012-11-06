@@ -37,7 +37,7 @@
  * Look at the constructor documentation for more details on the
  * format.
  *
- * @author Suvayu Ali <Suvayu dor Ali at cern dot ch>
+ * @author Suvayu Ali <Suvayu dot Ali at cern dot ch>
  * @date 2012-11-05 Mon
  *
  */
