@@ -49,6 +49,7 @@ TwoBodyDecayGen::TwoBodyDecayGen(double *masses, unsigned nparts) :
       " Expect the unexpected!" << std::endl;
   }
   for (unsigned i = 0; i < nparts - 2; ++i) {
+    if (masses[i] < 0.0) continue;
     double daumasses[NDAUS] = {masses[2*i + 1], masses[2*i + 2]};
     if (0 == i) {
       _daumasses[0] = daumasses[0];
