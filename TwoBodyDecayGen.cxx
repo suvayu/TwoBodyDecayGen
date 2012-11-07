@@ -57,7 +57,7 @@ TwoBodyDecayGen::TwoBodyDecayGen(double *masses, unsigned nparts) :
   _generator(TGenPhaseSpace()), _mommass(masses[0])
 {
   if (nparts > 7) {
-    std::cout << "Greater than two levels of decay is not supported. "
+    std::cout << "Greater than two levels of decay is not tested. "
       " Expect the unexpected!" << std::endl;
   }
   for (unsigned i = 0; i < nparts - 2; ++i) {
@@ -93,8 +93,6 @@ double TwoBodyDecayGen::generate(TLorentzVector &momp,
     particle_lvs.push_back(*(_generator.GetDecay(j)));
   }
 
-  // BOOST_FOREACH(DauNode node, _dauchannels) {
-  // }
   for (unsigned j = 0; j < NDAUS; ++j) {
     if (_dauchannels[ich].first[j]) {
       // FIXME: Ignoring branching fraction for now
