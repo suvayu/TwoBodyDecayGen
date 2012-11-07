@@ -2,7 +2,7 @@ TARGETS = stdvectorDict.cxx libDecayGen.so generator test testpartial
 
 alldicts += stdvectorDict.cxx
 
-LIBSRC = TwoBodyDecayGen.cxx
+LIBSRC = TwoBodyDecayGen.cxx $(alldicts)
 BINSRC = generator.cc test.cc testpartial.cc
 
 include mk/Rules.mk
