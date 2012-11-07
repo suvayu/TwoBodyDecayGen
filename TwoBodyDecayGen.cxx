@@ -10,6 +10,8 @@
 
 #include <iostream>
 
+#include <boost/foreach.hpp>
+
 #include <TRandom3.h>
 
 #include "TwoBodyDecayGen.hxx"
@@ -25,7 +27,7 @@ TwoBodyDecayGen::TwoBodyDecayGen(double mommass,
   _daumasses[0] = dau1mass;
   _daumasses[1] = dau2mass;
 
-  std::vector<TwoBodyDecayGen*> daus(2, NULL);
+  std::vector<TwoBodyDecayGen*> daus(NDAUS, NULL);
   daus[0] = dau1;
   daus[1] = dau2;
 
@@ -42,12 +44,12 @@ TwoBodyDecayGen::TwoBodyDecayGen(double mommass, double *daumasses,
   _daumasses[0] = daumasses[0];
   _daumasses[1] = daumasses[1];
 
-  std::vector<TwoBodyDecayGen*> daus(2, NULL);
+  std::vector<TwoBodyDecayGen*> daus(NDAUS, NULL);
   daus[0] = dau1;
   daus[1] = dau2;
 
-  DauNode priNode(daus, 1.0);
-  _dauchannels.push_back(priNode);
+  DauNode priChannel(daus, 1.0);
+  _dauchannels.push_back(priChannel);
 }
 
 
@@ -61,7 +63,7 @@ TwoBodyDecayGen::TwoBodyDecayGen(double *masses, unsigned nparts) :
   for (unsigned i = 0; i < nparts - 2; ++i) {
     if (masses[i] < 0.0) continue;
     double daumasses[NDAUS] = {masses[2*i + 1], masses[2*i + 2]};
-    std::vector<TwoBodyDecayGen*> daus(2, NULL);
+    std::vector<TwoBodyDecayGen*> daus(NDAUS, NULL);
 
     if (0 == i) {
       _daumasses[0] = daumasses[0];
@@ -70,14 +72,15 @@ TwoBodyDecayGen::TwoBodyDecayGen(double *masses, unsigned nparts) :
       daus[i-1] = new TwoBodyDecayGen(masses[i], daumasses[0], daumasses[1]);
     }
 
-    DauNode priNode(daus, 1.0);
-    _dauchannels.push_back(priNode);
+    DauNode priChannel(daus, 1.0);
+    _dauchannels.push_back(priChannel);
   }
 }
 
 
 double TwoBodyDecayGen::generate(TLorentzVector &momp,
-				 std::vector<TLorentzVector> &particle_lvs)
+				 std::vector<TLorentzVector> &particle_lvs,
+				 unsigned ich)
 {
   // setup decay and generate
   if (not _generator.SetDecay(momp, NDAUS, _daumasses)) {
@@ -90,10 +93,13 @@ double TwoBodyDecayGen::generate(TLorentzVector &momp,
     particle_lvs.push_back(*(_generator.GetDecay(j)));
   }
 
+  // BOOST_FOREACH(DauNode node, _dauchannels) {
+  // }
   for (unsigned j = 0; j < NDAUS; ++j) {
-    if (_daus[j]) {
-      // FIXME: Assumption: particle_lvs is of size 2
-      evt_wt += _daus[j]->generate(particle_lvs[j+1], particle_lvs);
+    if (_dauchannels[ich].first[j]) {
+      // FIXME: Ignoring branching fraction for now
+      evt_wt += _dauchannels[ich].first[j]->generate(particle_lvs[j+1],
+						     particle_lvs);
       evt_wt /= 2.0;
     } // FIXME: the handling of weights is probably wrong
   }
@@ -118,19 +124,25 @@ TTree* TwoBodyDecayGen::get_event_tree(unsigned nevents, TH1 *hmomp)
   std::cout << "Generating " << nevents << " events." << std::endl;
 
   TLorentzVector momp(0.0, 0.0, 4.0, _mommass);
-  for (unsigned i = 0; i < nevents; ++i) {
-    particle_lvs.clear();
+  unsigned eff_nevents(0);
 
-    // generate event and fill tree
-    momp.SetXYZM( 0.0, 0.0, hmomp->GetRandom(), 5.367);
-    particle_lvs.push_back(momp);
-    evt_wt = this->generate(momp, particle_lvs);
-    if (evt_wt < 0) {
-      std::cout << "Decay not permitted by kinematics, skipping!"
-		<< std::endl;
-      continue;
+  for (unsigned j = 0; j < _dauchannels.size(); ++j) {
+    eff_nevents = _dauchannels[j].second * nevents;
+
+    for (unsigned i = 0; i < eff_nevents; ++i) {
+      particle_lvs.clear();
+
+      // generate event and fill tree
+      momp.SetXYZM( 0.0, 0.0, hmomp->GetRandom(), 5.367);
+      particle_lvs.push_back(momp);
+      evt_wt = this->generate(momp, particle_lvs, j);
+      if (evt_wt < 0) {
+	std::cout << "Decay not permitted by kinematics, skipping!"
+		  << std::endl;
+	continue;
+      }
+      decaytree->Fill();
     }
-    decaytree->Fill();
   }
 
   return decaytree;
@@ -141,10 +153,13 @@ void TwoBodyDecayGen::Print() {
   std::cout << "mommass: " << _mommass << ", daumass: ("
 	      << _daumasses[0] << "," << _daumasses[1] << ")"
 	      << std::endl;
-  for (unsigned j = 0; j < NDAUS; ++j) {
-    if (_daus[j]) {
-      std::cout << __func__ << ": Dau " << j << std::endl;
-      _daus[j]->Print();
+
+  BOOST_FOREACH(DauNode node, _dauchannels) {
+    for (unsigned j = 0; j < NDAUS; ++j) {
+      if (node.first[j]) {
+	std::cout << __func__ << ": Dau " << j << std::endl;
+	node.first[j]->Print();
+      }
     }
   }
   return;

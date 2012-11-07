@@ -110,7 +110,8 @@ public:
    * @return Event weight
    */
   double generate(TLorentzVector &momp,
-		  std::vector<TLorentzVector> &particle_lvs);
+		  std::vector<TLorentzVector> &particle_lvs,
+		  unsigned ich=0);
 
   /**
    * Generate arbitrary number of events
