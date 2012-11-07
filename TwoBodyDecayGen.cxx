@@ -17,6 +17,12 @@
 #include "TwoBodyDecayGen.hxx"
 
 
+#define DEBUG(COUNT, MSG)                                  \
+  std::cout << "SA-DEBUG: [" << COUNT << "] (" << __func__ << ") " \
+  << MSG << std::endl; \
+  COUNT++;
+
+
 TwoBodyDecayGen::TwoBodyDecayGen(double mommass,
 				 double dau1mass,
 				 double dau2mass,
@@ -56,14 +62,22 @@ TwoBodyDecayGen::TwoBodyDecayGen(double mommass, double *daumasses,
 TwoBodyDecayGen::TwoBodyDecayGen(double *masses, unsigned nparts) :
   _generator(TGenPhaseSpace()), _mommass(masses[0])
 {
+  unsigned msgcount(0);
+
   if (nparts > 7) {
     std::cout << "Greater than two levels of decay is not tested. "
       " Expect the unexpected!" << std::endl;
   }
-  for (unsigned i = 0; i < nparts - 2; ++i) {
+  unsigned nodes = (nparts - 1) / 2;
+  for (unsigned i = 0; i < nodes; ++i) {
     if (masses[i] < 0.0) continue;
+    // FIXME: gibberish is entered for last particle
     double daumasses[NDAUS] = {masses[2*i + 1], masses[2*i + 2]};
     std::vector<TwoBodyDecayGen*> daus(NDAUS, NULL);
+
+    DEBUG(msgcount, "mom: " << masses[i] << " dau[" << 2*i+1 << ","
+	  << 2*i+2 <<  "]: (" << daumasses[0] << "," << daumasses[1]
+	  << ")");
 
     if (0 == i) {
       _daumasses[0] = daumasses[0];
