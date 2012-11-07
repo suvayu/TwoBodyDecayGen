@@ -147,16 +147,17 @@ TTree* TwoBodyDecayGen::get_event_tree(unsigned nevents, TH1 *hmomp)
 }
 
 
-void TwoBodyDecayGen::Print() {
-  std::cout << "mommass: " << _mommass << ", daumass: ("
-	      << _daumasses[0] << "," << _daumasses[1] << ")"
-	      << std::endl;
+void TwoBodyDecayGen::Print(unsigned indent) {
+  std::string prefix(indent * 2, ' ');
+  std::cout << prefix << "mommass: " << _mommass << ", daumass: ("
+	    << _daumasses[0] << "," << _daumasses[1] << ")"
+	    << std::endl;
 
   BOOST_FOREACH(DauNode node, _dauchannels) {
     for (unsigned j = 0; j < NDAUS; ++j) {
       if (node.first[j]) {
-	std::cout << __func__ << ": Dau " << j << std::endl;
-	node.first[j]->Print();
+	std::cout << "Dau " << j << ":" << std::endl;
+	node.first[j]->Print(indent + 1);
       }
     }
   }

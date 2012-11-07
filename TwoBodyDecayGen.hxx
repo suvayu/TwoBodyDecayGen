@@ -126,8 +126,9 @@ public:
   /** 
    * Print decay tree
    *
+   * @param indent Spaces to indent (to denote decay level)
    */
-  void Print();
+  void Print(unsigned indent=0);
 
 private:
 
