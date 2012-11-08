@@ -127,7 +127,7 @@ public:
    *
    * @param indent Spaces to indent (to denote decay level)
    */
-  void Print(unsigned indent=0);
+  void print(unsigned indent=0);
 
 private:
 

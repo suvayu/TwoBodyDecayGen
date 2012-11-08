@@ -88,7 +88,7 @@ int main(int argc, char* argv[])
   }
 
   TwoBodyDecayGen generator(&masses[0], masses.size());
-  generator.Print();
+  generator.print();
 
   // generate, print summary and dump to ROOT file
   TTree* eventtree = generator.get_event_tree(nevents, &Bsmomp);
