@@ -26,6 +26,19 @@ test:		LDLIBS += -lstdc++ $(ROOTLIBS)
 testpartial:	LDLIBS += -lstdc++ $(ROOTLIBS) -L./ -lDecayGen
 
 
+# Documentation
+.PHONY:	docs
+
+docs:
+	mkdir -p docs
+	doxygen doxy.conf > /dev/null
+
+
+
+##
+## Old Makefile contents
+##
+
 # ROOTINCLUDE	   := $(shell root-config --incdir)
 # ROOTCFLAGS := $(shell root-config --cflags)
 # ROOTLIBS   := $(shell root-config --libs)
