@@ -23,7 +23,29 @@
  */
 
 #define DEBUG(COUNT, MSG)                                  \
-  std::cout << "SA-DEBUG: [" << COUNT << "] (" << __func__ << ") " \
+  std::cout << "DEBUG: [" << COUNT << "] (" << __func__ << ") " \
+  << MSG << std::endl; \
+  COUNT++;
+
+
+/**
+ * \def WARNING(COUNT, MSG)
+ * Warning with a counter
+ */
+
+#define WARNING(COUNT, MSG)                                  \
+  std::cout << "WARNING: [" << COUNT << "] (" << __func__ << ") " \
+  << MSG << std::endl; \
+  COUNT++;
+
+
+/**
+ * \def ERROR(COUNT, MSG)
+ * Error message with a counter
+ */
+
+#define ERROR(COUNT, MSG)                                  \
+  std::cout << "ERROR: [" << COUNT << "] (" << __func__ << ") " \
   << MSG << std::endl; \
   COUNT++;
 
