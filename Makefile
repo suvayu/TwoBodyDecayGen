@@ -27,11 +27,14 @@ testpartial:	LDLIBS += -lstdc++ $(ROOTLIBS) -L./ -lDecayGen
 
 
 # Documentation
-.PHONY:	docs
+.PHONY:	docs gh-pages
 
 docs:
 	mkdir -p docs
 	doxygen doxy.conf > /dev/null
+
+gh-pages:	docs
+	cd docs && git commit -i html -m "Update HTML docs" && git push
 
 
 
