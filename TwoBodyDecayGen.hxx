@@ -100,6 +100,18 @@ public:
   ~TwoBodyDecayGen() {}
 
   /**
+   * Add a new decay channel
+   *
+   * @param masses Array of doubles with mass of all the particles in GeV/c²
+   * @param nparts Number of particles in the decay tree (lenght of the array)
+   * @param brfr Branching fraction for the channel
+   *
+   * @return Status
+   */
+  bool add_decay_channel(double *masses, unsigned nparts,
+			 double brfr=1.0);
+
+  /**
    * Generate one event at a time
    *
    * @param momp Mother 4-momentum
@@ -122,7 +134,7 @@ public:
    */
   TTree* get_event_tree(unsigned nevents, TH1 *hmomp);
 
-  /** 
+  /**
    * Print decay tree
    *
    * @param indent Spaces to indent (to denote decay level)

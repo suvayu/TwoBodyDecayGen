@@ -91,16 +91,28 @@ TwoBodyDecayGen::TwoBodyDecayGen(double mommass, double *daumasses,
 TwoBodyDecayGen::TwoBodyDecayGen(double *masses, unsigned nparts) :
   _generator(TGenPhaseSpace()), _mommass(masses[0])
 {
+  this->add_decay_channel(masses, nparts);
+}
+
+
+bool TwoBodyDecayGen::add_decay_channel(double *masses, unsigned nparts,
+					double brfr)
+{
   unsigned msgcount(0);
 
-  if (nparts > 7) {
-    std::cout << "Greater than two levels of decay is not tested. "
-      "Expect the unexpected!" << std::endl;
+  if (masses[0] != _mommass) {
+    ERROR(msgcount, "Mass of the mothers do not match!"
+	  " Skipping new decay channel.");
+    return false;
   }
+  if (nparts > 7) {
+    WARNING(msgcount, "Greater than two levels of decay is not tested."
+	    " Expect the unexpected!");
+  }
+
   unsigned nodes = (nparts - 1) / 2;
   for (unsigned i = 0; i < nodes; ++i) {
     if (masses[i] < 0.0) continue;
-    // FIXME: gibberish is entered for last particle
     double daumasses[NDAUS] = {masses[2*i + 1], masses[2*i + 2]};
     std::vector<TwoBodyDecayGen*> daus(NDAUS, NULL);
 
@@ -114,9 +126,16 @@ TwoBodyDecayGen::TwoBodyDecayGen(double *masses, unsigned nparts) :
       daus[i-1] = new TwoBodyDecayGen(masses[i], daumasses[0], daumasses[1]);
     }
 
-    DauNode priChannel(daus, 1.0);
-    _dauchannels.push_back(priChannel);
+    if (_dauchannels.empty()) { // Ignore provided B.F. when there are
+      brfr = 1.0;		// no primary channels
+    } else {
+      _dauchannels[0].second -= brfr; // Correct primary channel B.F.
+    }
+    DauNode channel(daus, brfr);
+    _dauchannels.push_back(channel);
   }
+
+  return true;
 }
 
 
