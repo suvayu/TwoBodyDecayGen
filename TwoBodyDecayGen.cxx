@@ -17,6 +17,11 @@
 #include "TwoBodyDecayGen.hxx"
 
 
+/**
+ * \def DEBUG(COUNT, MSG)
+ * Debug statement with a counter
+ */
+
 #define DEBUG(COUNT, MSG)                                  \
   std::cout << "SA-DEBUG: [" << COUNT << "] (" << __func__ << ") " \
   << MSG << std::endl; \

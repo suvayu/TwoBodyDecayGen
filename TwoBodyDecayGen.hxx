@@ -1,6 +1,6 @@
 /**
  * @file   TwoBodyDecayGen.hxx
- * @author Suvayu Ali <Suvayu.Ali@cern.ch>
+ * @author Suvayu Ali <Suvayu.Ali@NOSPAMcern.ch>
  * @date   Wed Oct 10 22:39:13 2012
  *
  * @brief  This class implements an interface to generate 2-body decays
@@ -37,7 +37,7 @@
  * Look at the constructor documentation for more details on the
  * format.
  *
- * @author Suvayu Ali <Suvayu dot Ali at cern dot ch>
+ * @author Suvayu Ali <Suvayu.Ali@NOSPAMcern.ch>
  * @date 2012-11-05 Mon
  *
  */
@@ -45,8 +45,8 @@
 class TwoBodyDecayGen {
 public:
 
-  typedef std::pair<std::vector<TwoBodyDecayGen*>, double> DauNode;
-  typedef std::vector<DauNode> DauNodeVec;
+  typedef std::pair<std::vector<TwoBodyDecayGen*>, double> DauNode; /**< Node with B.F. */
+  typedef std::vector<DauNode> DauNodeVec; /**< Vector of nodes (channels) */
 
   /**
    * Constructor 1
@@ -106,6 +106,7 @@ public:
    *
    * @param momp Mother 4-momentum
    * @param particle_lvs std::vector used to return generated 4-momenta
+   * @param ich Decay channel to generate (default: first)
    *
    * @return Event weight
    */
@@ -135,7 +136,7 @@ private:
   TGenPhaseSpace _generator;	/**< Generator for the current decay vertex */
   double _mommass;		/**< Mother particle mass for the current decay vertex */
   double _daumasses[NDAUS];	/**< Array of the two daughter masses */
-  DauNodeVec _dauchannels;
+  DauNodeVec _dauchannels;	/**< Decay channels with B.F. (stored as pointers) */
 };
 
 #endif	// TWOBODYDECAYGEN_HXX
