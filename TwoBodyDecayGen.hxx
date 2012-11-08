@@ -1,6 +1,6 @@
 /**
  * @file   TwoBodyDecayGen.hxx
- * @author Suvayu Ali <Suvayu.Ali@NOSPAMcern.ch>
+ * @author Suvayu Ali <Suvayu.Ali@cernNOSPAM.ch>
  * @date   Wed Oct 10 22:39:13 2012
  *
  * @brief  This class implements an interface to generate 2-body decays
@@ -37,7 +37,7 @@
  * Look at the constructor documentation for more details on the
  * format.
  *
- * @author Suvayu Ali <Suvayu.Ali@NOSPAMcern.ch>
+ * @author Suvayu Ali <Suvayu.Ali@cernNOSPAM.ch>
  * @date 2012-11-05 Mon
  *
  */
@@ -72,8 +72,6 @@ public:
   TwoBodyDecayGen(double mommass, double *daumasses,
 		  TwoBodyDecayGen *dau1=NULL,
 		  TwoBodyDecayGen *dau2=NULL);
-    // c++11 only, compile with -std=c++11 or -std=gnu++11
-    // _daus{dau1, dau2} {}
 
   /**
    * Constructor that takes an array with particle masses for the

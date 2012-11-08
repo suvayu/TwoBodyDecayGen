@@ -1,6 +1,6 @@
 /**
  * @file   TwoBodyDecayGen.cxx
- * @author Suvayu Ali <Suvayu.Ali@cern.ch>
+ * @author Suvayu Ali <Suvayu.Ali@cernNOSPAM.ch>
  * @date   Thu Oct 11 13:45:20 2012
  *
  * @brief  Implementation of TwoBodyDecayGen
@@ -51,6 +51,8 @@ TwoBodyDecayGen::TwoBodyDecayGen(double mommass, double *daumasses,
 				 TwoBodyDecayGen *dau1,
 				 TwoBodyDecayGen *dau2) :
   _generator(TGenPhaseSpace()), _mommass(mommass)//, _daumasses(daumasses)
+  // c++11 only, compile with -std=c++11 or -std=gnu++11
+  // _daumasses{dau1, dau2} {}
 {
   _daumasses[0] = daumasses[0];
   _daumasses[1] = daumasses[1];
@@ -71,7 +73,7 @@ TwoBodyDecayGen::TwoBodyDecayGen(double *masses, unsigned nparts) :
 
   if (nparts > 7) {
     std::cout << "Greater than two levels of decay is not tested. "
-      " Expect the unexpected!" << std::endl;
+      "Expect the unexpected!" << std::endl;
   }
   unsigned nodes = (nparts - 1) / 2;
   for (unsigned i = 0; i < nodes; ++i) {
@@ -81,8 +83,7 @@ TwoBodyDecayGen::TwoBodyDecayGen(double *masses, unsigned nparts) :
     std::vector<TwoBodyDecayGen*> daus(NDAUS, NULL);
 
     DEBUG(msgcount, "mom: " << masses[i] << " dau[" << 2*i+1 << ","
-	  << 2*i+2 <<  "]: (" << daumasses[0] << "," << daumasses[1]
-	  << ")");
+	  << 2*i+2 <<  "]: (" << daumasses[0] << "," << daumasses[1] << ")");
 
     if (0 == i) {
       _daumasses[0] = daumasses[0];
