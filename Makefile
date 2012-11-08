@@ -34,7 +34,9 @@ docs:
 	doxygen doxy.conf > /dev/null
 
 gh-pages:	docs
-	cd docs && git commit -i html -m "Update HTML docs" && git push
+	cd docs && git add html && \
+	           git commit -a -m "Update HTML docs" && \
+	           git push
 
 
 
