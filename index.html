@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+
+    <title>Twobodydecaygen by suvayu</title>
+  </head>
+
+  <body>
+
+    <header>
+      <div class="container">
+        <h1>Twobodydecaygen</h1>
+        <h2>A Monte Carlo phase space generator for 2-body decays using TGenPhaseSpace from ROOT</h2>
+
+        <section id="downloads">
+          <a href="https://github.com/suvayu/TwoBodyDecayGen/zipball/master" class="btn">Download as .zip</a>
+          <a href="https://github.com/suvayu/TwoBodyDecayGen/tarball/master" class="btn">Download as .tar.gz</a>
+          <a href="https://github.com/suvayu/TwoBodyDecayGen" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section>
+      </div>
+    </header>
+
+    <div class="container">
+      <section id="main_content">
+        <h1>About <code>TwoBodyDecayGen</code>
+</h1>
+
+<p>The class <code>TwoBodyDecayGen</code> implements a decay tree for 2-body decays.
+It achieves this by implementing a decay node as which is only aware
+of the particle masses associated to itself and holds a handle to the
+daughter nodes through pointers.  This serves as a building block to
+build the entire decay tree in an extremely flexible fashion.  The
+class provides a phase space event generation interface by wrapping
+around the <code>ROOT</code> class <code>TGenPhaseSpace</code>.  It also supports
+implementing branching fractions for different decay channels by
+assigning weights to each decay node.</p>
+
+<h1>Doxygen HTML documentation</h1>
+
+<p><a href="http://suvayu.github.com/TwoBodyDecayGen/html/">http://suvayu.github.com/TwoBodyDecayGen/html/</a></p>
+      </section>
+    </div>
+
+    
+  </body>
+</html>
