@@ -121,8 +121,7 @@ $(document).ready(function(){initNavTree('classTwoBodyDecayGen.html','');});
 <div class="dynheader">
 Collaboration diagram for TwoBodyDecayGen:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classTwoBodyDecayGen__coll__graph.svg" width="183" height="128"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="classTwoBodyDecayGen__coll__graph.svg" width="183" height="128"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 
 <p><a href="classTwoBodyDecayGen-members.html">List of all members.</a></p>
@@ -144,12 +143,14 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:aa1de5396473d210e82868e8008a53b20"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor 2.  <a href="#aa1de5396473d210e82868e8008a53b20"></a><br/></td></tr>
 <tr class="memitem:ad79148fdad07ccbb2d5187b6bfebdeb2"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTwoBodyDecayGen.html#ad79148fdad07ccbb2d5187b6bfebdeb2">TwoBodyDecayGen</a> (double *masses, unsigned nparts)</td></tr>
 <tr class="memdesc:ad79148fdad07ccbb2d5187b6bfebdeb2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor that takes an array with particle masses for the entire decay tree.  <a href="#ad79148fdad07ccbb2d5187b6bfebdeb2"></a><br/></td></tr>
+<tr class="memitem:a6f1fcc6d618eb46a79e079250c6d5b49"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTwoBodyDecayGen.html#a6f1fcc6d618eb46a79e079250c6d5b49">add_decay_channel</a> (double *masses, unsigned nparts, double brfr=1.0)</td></tr>
+<tr class="memdesc:a6f1fcc6d618eb46a79e079250c6d5b49"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add a new decay channel.  <a href="#a6f1fcc6d618eb46a79e079250c6d5b49"></a><br/></td></tr>
 <tr class="memitem:ac3b0750f24d42811068927a48760d698"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTwoBodyDecayGen.html#ac3b0750f24d42811068927a48760d698">generate</a> (TLorentzVector &amp;momp, std::vector&lt; TLorentzVector &gt; &amp;particle_lvs, unsigned ich=0)</td></tr>
 <tr class="memdesc:ac3b0750f24d42811068927a48760d698"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generate one event at a time.  <a href="#ac3b0750f24d42811068927a48760d698"></a><br/></td></tr>
 <tr class="memitem:aa9813b658016d39188c27e36b661b620"><td class="memItemLeft" align="right" valign="top">TTree *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTwoBodyDecayGen.html#aa9813b658016d39188c27e36b661b620">get_event_tree</a> (unsigned nevents, TH1 *hmomp)</td></tr>
 <tr class="memdesc:aa9813b658016d39188c27e36b661b620"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generate arbitrary number of events.  <a href="#aa9813b658016d39188c27e36b661b620"></a><br/></td></tr>
-<tr class="memitem:a6b7ae5c562052c968204a31e07258f4a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTwoBodyDecayGen.html#a6b7ae5c562052c968204a31e07258f4a">Print</a> (unsigned indent=0)</td></tr>
-<tr class="memdesc:a6b7ae5c562052c968204a31e07258f4a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Print decay tree.  <a href="#a6b7ae5c562052c968204a31e07258f4a"></a><br/></td></tr>
+<tr class="memitem:a3ca11918cc73e1a1761c20f7e06127ab"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTwoBodyDecayGen.html#a3ca11918cc73e1a1761c20f7e06127ab">print</a> (unsigned indent=0)</td></tr>
+<tr class="memdesc:a3ca11918cc73e1a1761c20f7e06127ab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Print decay tree.  <a href="#a3ca11918cc73e1a1761c20f7e06127ab"></a><br/></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
@@ -168,7 +169,7 @@ double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cl
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>This class defines a sequential 2-body decay tree and generates events using the ROOT class TGenPhaseSpace. </p>
 <p>Note that this is a very simple phase space event generator and is not aware of any resonances. The decay tree is stored as an array with particle masses and pointers to <a class="el" href="classTwoBodyDecayGen.html" title="This class defines a sequential 2-body decay tree and generates events using the ROOT class TGenPhase...">TwoBodyDecayGen</a> instances for subsequent decay vertices. These pointers are NULL for leaf nodes in the decay tree. There are several constructors to instantiate a <a class="el" href="classTwoBodyDecayGen.html" title="This class defines a sequential 2-body decay tree and generates events using the ROOT class TGenPhase...">TwoBodyDecayGen</a> object; use of the constructor which takes an array with particle masses and length of the decay tree (also the length of the particle mass array) is recommended for simplicity of use. Look at the constructor documentation for more details on the format.</p>
-<dl class="section author"><dt>Author:</dt><dd>Suvayu Ali <a href="#" onclick="location.href='mai'+'lto:'+'Suv'+'ay'+'u.A'+'li'+'@NO'+'SP'+'AMc'+'er'+'n.c'+'h'; return false;">Suvay<span style="display: none;">.nosp@m.</span>u.Al<span style="display: none;">.nosp@m.</span>i@NOS<span style="display: none;">.nosp@m.</span>PAMc<span style="display: none;">.nosp@m.</span>ern.c<span style="display: none;">.nosp@m.</span>h</a> </dd></dl>
+<dl class="section author"><dt>Author:</dt><dd>Suvayu Ali <a href="#" onclick="location.href='mai'+'lto:'+'Suv'+'ay'+'u.A'+'li'+'@ce'+'rn'+'NOS'+'PA'+'M.c'+'h'; return false;">Suvay<span style="display: none;">.nosp@m.</span>u.Al<span style="display: none;">.nosp@m.</span>i@cer<span style="display: none;">.nosp@m.</span>nNOS<span style="display: none;">.nosp@m.</span>PAM.c<span style="display: none;">.nosp@m.</span>h</a> </dd></dl>
 <dl class="section date"><dt>Date:</dt><dd>2012-11-05 Mon </dd></dl>
 </div><hr/><h2>Member Typedef Documentation</h2>
 <a class="anchor" id="a35d23037431d8f1a2bf40c91f3f141df"></a>
@@ -334,6 +335,49 @@ double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cl
 </div>
 </div>
 <hr/><h2>Member Function Documentation</h2>
+<a class="anchor" id="a6f1fcc6d618eb46a79e079250c6d5b49"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool TwoBodyDecayGen::add_decay_channel </td>
+          <td>(</td>
+          <td class="paramtype">double *&#160;</td>
+          <td class="paramname"><em>masses</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned&#160;</td>
+          <td class="paramname"><em>nparts</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>brfr</em> = <code>1.0</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Add a new decay channel. </p>
+<dl class="params"><dt>Parameters:</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">masses</td><td>Array of doubles with mass of all the particles in GeV/c² </td></tr>
+    <tr><td class="paramname">nparts</td><td>Number of particles in the decay tree (lenght of the array) </td></tr>
+    <tr><td class="paramname">brfr</td><td>Branching fraction for the channel</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns:</dt><dd>Status </dd></dl>
+
+</div>
+</div>
 <a class="anchor" id="ac3b0750f24d42811068927a48760d698"></a>
 <div class="memitem">
 <div class="memproto">
@@ -413,12 +457,12 @@ double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cl
 
 </div>
 </div>
-<a class="anchor" id="a6b7ae5c562052c968204a31e07258f4a"></a>
+<a class="anchor" id="a3ca11918cc73e1a1761c20f7e06127ab"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void TwoBodyDecayGen::Print </td>
+          <td class="memname">void TwoBodyDecayGen::print </td>
           <td>(</td>
           <td class="paramtype">unsigned&#160;</td>
           <td class="paramname"><em>indent</em> = <code>0</code></td><td>)</td>
@@ -471,7 +515,7 @@ double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cl
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classTwoBodyDecayGen.html">TwoBodyDecayGen</a></li>
-    <li class="footer">Generated on Thu Nov 8 2012 03:10:28 for TwoBodyDecayGen by
+    <li class="footer">Generated on Thu Nov 8 2012 16:23:38 for TwoBodyDecayGen by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.1.1 </li>
   </ul>
