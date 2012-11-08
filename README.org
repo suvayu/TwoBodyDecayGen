@@ -1,0 +1,15 @@
+* About =TwoBodyDecayGen=
+
+The class =TwoBodyDecayGen= implements a decay tree for 2-body decays.
+It achieves this by implementing a decay node as which is only aware
+of the particle masses associated to itself and holds a handle to the
+daughter nodes through pointers.  This serves as a building block to
+build the entire decay tree in an extremely flexible fashion.  The
+class provides a phase space event generation interface by wrapping
+around the =ROOT= class =TGenPhaseSpace=.  It also supports
+implementing branching fractions for different decay channels by
+assigning weights to each decay node.
+
+* Doxygen HTML documentation
+
+[[http://suvayu.github.com/TwoBodyDecayGen/html/]]
