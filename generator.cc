@@ -87,7 +87,17 @@ int main(int argc, char* argv[])
     masses.push_back(0.0);
   }
 
+  std::vector<double> masses2;
+  if ("DsstPi" == mode) {
+    masses2.push_back(BSMASS * 1E-3);
+    masses2.push_back(DSSTMASS * 1E-3);
+    masses2.push_back(PIMASS * 1E-3);
+    masses2.push_back(DSMASS * 1E-3);
+    masses2.push_back(PIMASS * 1E-3);
+  }
+
   TwoBodyDecayGen generator(&masses[0], masses.size());
+  generator.add_decay_channel(&masses2[0], masses2.size(), 0.05);
   generator.print();
 
   // generate, print summary and dump to ROOT file
