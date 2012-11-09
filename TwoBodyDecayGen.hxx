@@ -123,7 +123,7 @@ public:
    */
   double generate(TLorentzVector &momp,
 		  std::vector<TLorentzVector> &particle_lvs,
-		  unsigned ich=-1);
+		  int ich=-1);
 
   /**
    * Generate arbitrary number of events

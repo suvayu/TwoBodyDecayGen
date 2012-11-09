@@ -141,7 +141,7 @@ bool TwoBodyDecayGen::add_decay_channel(double *masses, unsigned nparts,
 
 double TwoBodyDecayGen::generate(TLorentzVector &momp,
 				 std::vector<TLorentzVector> &particle_lvs,
-				 unsigned ich)
+				 int ich)
 {
   // setup decay and generate
   if (not _generator.SetDecay(momp, NDAUS, _daumasses)) {
