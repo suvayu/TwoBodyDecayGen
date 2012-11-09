@@ -154,14 +154,24 @@ double TwoBodyDecayGen::generate(TLorentzVector &momp,
     particle_lvs.push_back(*(_generator.GetDecay(j)));
   }
 
+  // propagate generate to daughters
   for (unsigned j = 0; j < NDAUS; ++j) {
-    if (_dauchannels[ich].first[j]) {
-      // FIXME: Ignoring branching fraction for now
-      evt_wt += _dauchannels[ich].first[j]->generate(particle_lvs[j+1],
-						     particle_lvs);
-      evt_wt /= 2.0;
-    } // FIXME: the handling of weights is probably wrong
-  }
+    if (ich < 0) {
+      for (unsigned i = 0; i < _dauchannels.size(); ++i) {
+	if (_dauchannels[i].first[j]) {
+	  evt_wt += _dauchannels[i].first[j]->generate(particle_lvs[j+1],
+						       particle_lvs, -1);
+	  evt_wt /= 2.0;
+	}
+      }
+    } else {
+      if (_dauchannels[ich].first[j]) {
+	evt_wt += _dauchannels[ich].first[j]->generate(particle_lvs[j+1],
+						       particle_lvs, -1);
+	evt_wt /= 2.0;
+      }
+    }
+  } // FIXME: the handling of weights is probably wrong
 
   return evt_wt;
 }
