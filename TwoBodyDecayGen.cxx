@@ -100,7 +100,7 @@ bool TwoBodyDecayGen::add_decay_channel(double *masses, unsigned nparts,
 {
   unsigned msgcount(0);
 
-  if (masses[0] != _mommass) {
+  if (masses[0] - _mommass > 1E-4) {
     ERROR(msgcount, "Mass of the mothers do not match!"
 	  " Skipping new decay channel.");
     return false;
