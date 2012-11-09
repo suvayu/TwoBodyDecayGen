@@ -116,13 +116,14 @@ public:
    *
    * @param momp Mother 4-momentum
    * @param particle_lvs std::vector used to return generated 4-momenta
-   * @param ich Decay channel to generate (default: first)
+   * @param ich Decay channel to generate (default: loop over all).
+   *            Passing a -ve number loops over all channels
    *
    * @return Event weight
    */
   double generate(TLorentzVector &momp,
 		  std::vector<TLorentzVector> &particle_lvs,
-		  unsigned ich=0);
+		  unsigned ich=-1);
 
   /**
    * Generate arbitrary number of events

@@ -156,7 +156,7 @@ double TwoBodyDecayGen::generate(TLorentzVector &momp,
 
   // propagate generate to daughters
   for (unsigned j = 0; j < NDAUS; ++j) {
-    if (ich < 0) {
+    if (ich < 0) {		// For daughter of daughters
       for (unsigned i = 0; i < _dauchannels.size(); ++i) {
 	if (_dauchannels[i].first[j]) {
 	  evt_wt += _dauchannels[i].first[j]->generate(particle_lvs[j+1],
