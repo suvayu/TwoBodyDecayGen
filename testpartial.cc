@@ -58,7 +58,7 @@ int main(int argc, char* argv[])
   TFile outfile(fname.c_str(), "read");
   TTree *outtree = dynamic_cast<TTree*>(outfile.Get("TwoBodyDecayGen_decaytree"));
 
-  kfactorp(intree, outtree);
+  kfactorp(outtree);
 
   return 0;
 }
