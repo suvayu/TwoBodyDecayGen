@@ -214,7 +214,9 @@ TTree* TwoBodyDecayGen::get_event_tree(unsigned nevents, TH1 *hmomp)
   TLorentzVector momp(0.0, 0.0, 4.0, _mommass);
   unsigned eff_nevents(0);
 
+  // FIXME: Does not consider branching factions beyond first daughter
   for (unsigned j = 0; j < _dauchannels.size(); ++j) {
+    // FIXME: Is this multiplication correct?
     eff_nevents = _dauchannels[j].second * nevents;
 
     for (unsigned i = 0; i < eff_nevents; ++i) {
