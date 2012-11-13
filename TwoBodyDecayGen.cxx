@@ -18,36 +18,39 @@
 
 
 /**
- * \def DEBUG(COUNT, MSG)
+ * \def DEBUG(MSG)
  * Debug statement with a counter
  */
 
-#define DEBUG(COUNT, MSG)                                  \
-  std::cout << "DEBUG: [" << COUNT << "] (" << __func__ << ") " \
+#define DEBUG(MSG)  \
+  std::cout << "DEBUG: [" << _count << "] (" << __func__ << ") " \
   << MSG << std::endl; \
-  COUNT++;
+  _count++;
 
 
 /**
- * \def WARNING(COUNT, MSG)
+ * \def WARNING(MSG)
  * Warning with a counter
  */
 
-#define WARNING(COUNT, MSG)                                  \
-  std::cout << "WARNING: [" << COUNT << "] (" << __func__ << ") " \
+#define WARNING(MSG)                                  \
+  std::cout << "WARNING: [" << _count << "] (" << __func__ << ") " \
   << MSG << std::endl; \
-  COUNT++;
+  _count++;
 
 
 /**
- * \def ERROR(COUNT, MSG)
+ * \def ERROR(MSG)
  * Error message with a counter
  */
 
-#define ERROR(COUNT, MSG)                                  \
-  std::cout << "ERROR: [" << COUNT << "] (" << __func__ << ") " \
+#define ERROR(MSG)                                  \
+  std::cout << "ERROR: [" << _count << "] (" << __func__ << ") " \
   << MSG << std::endl; \
-  COUNT++;
+  _count++;
+
+
+unsigned long long TwoBodyDecayGen::_count(0);
 
 
 TwoBodyDecayGen::TwoBodyDecayGen(double mommass,
@@ -91,50 +94,66 @@ TwoBodyDecayGen::TwoBodyDecayGen(double mommass, double *daumasses,
 TwoBodyDecayGen::TwoBodyDecayGen(double *masses, unsigned nparts) :
   _generator(TGenPhaseSpace()), _mommass(masses[0])
 {
-  this->add_decay_channel(masses, nparts);
+  _daumasses[0] = masses[1];
+  _daumasses[1] = masses[2];
+
+  if (nparts > 3) {
+    this->add_decay_channel(masses, nparts, 1.0);
+  }
 }
 
 
 bool TwoBodyDecayGen::add_decay_channel(double *masses, unsigned nparts,
 					double brfr)
 {
-  unsigned msgcount(0);
-
-  if (masses[0] - _mommass > 1E-4) {
-    ERROR(msgcount, "Mass of the mothers do not match!"
+  if ((std::fabs(masses[0] - _mommass) > 1E-4) or
+      (std::fabs(masses[1] - _daumasses[0]) > 1E-4) or
+      (std::fabs(masses[2] - _daumasses[1]) > 1E-4)) {
+    ERROR("Mass of the mothers do not match!"
 	  " Skipping new decay channel.");
     return false;
   }
+
+  if (brfr - 1.0 > 0.0) {
+    ERROR("Branching fraction cannot be > 1.0,"
+	  " skipping new decay channel.");
+    return false;
+  }
+
   if (nparts > 7) {
-    WARNING(msgcount, "Greater than two levels of decay is not tested."
+    WARNING("Greater than two levels of decay is not tested."
 	    " Expect the unexpected!");
   }
 
-  unsigned nodes = (nparts - 1) / 2;
-  for (unsigned i = 0; i < nodes; ++i) {
-    if (masses[i] < 0.0) continue;
-    double daumasses[NDAUS] = {masses[2*i + 1], masses[2*i + 2]};
-    std::vector<TwoBodyDecayGen*> daus(NDAUS, NULL);
+  std::vector<double> dau1tree, dau2tree;
 
-    DEBUG(msgcount, "mom: " << masses[i] << " dau[" << 2*i+1 << ","
-	  << 2*i+2 <<  "]: (" << daumasses[0] << "," << daumasses[1] << ")");
-
-    if (0 == i) {
-      _daumasses[0] = daumasses[0];
-      _daumasses[1] = daumasses[1];
+  // FIXME: spurious ghost daughters for stable daughter
+  const unsigned nodes = (nparts - 1) / 2;
+  for (unsigned i = 1; i < nodes; ++i) {
+    if (i % 2) {
+      if (i == 1) dau1tree.push_back(masses[i]);
+      dau1tree.push_back(masses[2*i + 1]);
+      dau1tree.push_back(masses[2*i + 2]);
     } else {
-      daus[i-1] = new TwoBodyDecayGen(masses[i], daumasses[0], daumasses[1]);
+      if (i == 2) dau2tree.push_back(masses[i]);
+      dau2tree.push_back(masses[2*i + 1]);
+      dau2tree.push_back(masses[2*i + 2]);
     }
-
-    if (_dauchannels.empty()) { // Ignore provided B.F. when there are
-      brfr = 1.0;		// no primary channels
-    } else {
-      _dauchannels[0].second -= brfr; // Correct primary channel B.F.
-    }
-    DauNode channel(daus, brfr);
-    _dauchannels.push_back(channel);
   }
 
+  std::vector<TwoBodyDecayGen*> daus(NDAUS, NULL);
+  if (not dau1tree.empty()) {
+    daus[0] = new TwoBodyDecayGen(&dau1tree[0], dau1tree.size());
+  }
+  if (not dau2tree.empty()) {
+    daus[1] = new TwoBodyDecayGen(&dau2tree[0], dau2tree.size());
+  }
+
+  if (not _dauchannels.empty()) {
+    _dauchannels[0].second -= brfr; // Correct primary channel B.F.
+  }
+  DauNode channel(daus, brfr);
+  _dauchannels.push_back(channel);
   return true;
 }
 
@@ -224,7 +243,14 @@ void TwoBodyDecayGen::print(unsigned indent) {
 	    << _daumasses[0] << "," << _daumasses[1] << ")"
 	    << std::endl;
 
+  DEBUG("# of channels: " << _dauchannels.size());
+
   BOOST_FOREACH(DauNode node, _dauchannels) {
+    DEBUG("# of daughters in channel: " << node.first.size());
+
+    if (not node.first.empty()) {
+      std::cout << "Channel BF:" << node.second << std::endl;
+    }
     for (unsigned j = 0; j < NDAUS; ++j) {
       if (node.first[j]) {
 	std::cout << "Dau " << j << ":" << std::endl;

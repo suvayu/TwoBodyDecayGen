@@ -103,13 +103,13 @@ public:
    * Add a new decay channel
    *
    * @param masses Array of doubles with mass of all the particles in GeV/c²
-   * @param nparts Number of particles in the decay tree (lenght of the array)
+   * @param nparts Number of particles in the decay tree (length of the array)
    * @param brfr Branching fraction for the channel
    *
    * @return Status
    */
   bool add_decay_channel(double *masses, unsigned nparts,
-			 double brfr=1.0);
+			 double brfr);
 
   /**
    * Generate one event at a time
@@ -144,6 +144,7 @@ public:
 
 private:
 
+  static unsigned long long _count; /**< Debug message counter */
   TGenPhaseSpace _generator;	/**< Generator for the current decay vertex */
   double _mommass;		/**< Mother particle mass for the current decay vertex */
   double _daumasses[NDAUS];	/**< Array of the two daughter masses */
