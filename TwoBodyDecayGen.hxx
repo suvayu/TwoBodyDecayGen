@@ -13,6 +13,7 @@
 
 #include <string>
 #include <vector>
+#include <queue>
 
 #include <TH1.h>
 #include <TTree.h>
@@ -110,6 +111,13 @@ public:
    */
   bool add_decay_channel(double *masses, unsigned nparts,
 			 double brfr);
+
+  TwoBodyDecayGen* get_daughter(unsigned chid, unsigned dauid);
+
+  double get_brfr(unsigned chid);
+
+  void find_leaf_nodes(std::vector<std::queue<double> > brfrVec,
+		       std::queue<double> *brfrQ=NULL);
 
   /**
    * Generate one event at a time

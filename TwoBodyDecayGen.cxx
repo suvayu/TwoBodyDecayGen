@@ -158,6 +158,58 @@ bool TwoBodyDecayGen::add_decay_channel(double *masses, unsigned nparts,
 }
 
 
+TwoBodyDecayGen* TwoBodyDecayGen::get_daughter(unsigned chid, unsigned dauid)
+{
+  if (dauid > 1) {
+    ERROR("Only " << NDAUS << " daughters.  dauid cannot be greater than 1.");
+    return NULL;
+  }
+  return _dauchannels[chid].first[dauid];
+}
+
+
+double TwoBodyDecayGen::get_brfr(unsigned chid)
+{
+  return _dauchannels[chid].second;
+}
+
+
+void TwoBodyDecayGen::find_leaf_nodes(std::vector<std::queue<double> > brfrVec,
+					  std::queue<double> *brfrQ)
+{
+  // for top level call
+  if (brfrQ == NULL) {
+    brfrQ = new std::queue<double>();
+  }
+
+  // loop over channels
+  for (unsigned chid = 0; chid < _dauchannels.size(); ++chid) {
+    brfrQ->push(this->get_brfr(chid)); // channel BF
+
+    // need copy when both daughters are _not_ leaves
+    std::queue<double> brfrQcopy = *brfrQ;
+
+    unsigned leafcounter(0);
+    // loop over daughters for each channel
+    for (unsigned dauid = 0; dauid < NDAUS; ++dauid) {
+      TwoBodyDecayGen *dau = this->get_daughter(chid, dauid);
+
+      // recursive calls
+      if (dau) { // not a leaf node, propagate call
+	dau->find_leaf_nodes(brfrVec, brfrQ);
+      } else { // leaf branch
+	++leafcounter;
+	if (leafcounter == 2) continue;
+	// executed only when first branch is a leaf
+	brfrVec.push_back(*brfrQ); // end of traversal, save
+	brfrQ = &brfrQcopy;
+      }
+    } // end daughter loop
+  } // end channel loop
+  return;
+}
+
+
 double TwoBodyDecayGen::generate(TLorentzVector &momp,
 				 std::vector<TLorentzVector> &particle_lvs,
 				 int ich)
