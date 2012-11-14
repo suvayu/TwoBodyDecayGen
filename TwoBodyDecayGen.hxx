@@ -48,6 +48,7 @@ public:
 
   typedef std::pair<std::vector<TwoBodyDecayGen*>, double> DauNode; /**< Node with B.F. */
   typedef std::vector<DauNode> DauNodeVec; /**< Vector of nodes (channels) */
+  typedef std::pair<unsigned, double> chBFpair; /**< Channel id and B.F. pair */
 
   /**
    * Constructor 1
@@ -116,8 +117,8 @@ public:
 
   double get_brfr(unsigned chid);
 
-  void find_leaf_nodes(std::vector<std::queue<double> > brfrVec,
-		       std::queue<double> *brfrQ=NULL);
+  void find_leaf_nodes(std::vector<std::queue<chBFpair> > brfrVec,
+		       std::queue<chBFpair> *brfrQ=NULL);
 
   /**
    * Generate one event at a time
