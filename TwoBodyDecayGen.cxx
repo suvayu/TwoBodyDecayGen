@@ -174,20 +174,20 @@ double TwoBodyDecayGen::get_brfr(unsigned chid)
 }
 
 
-void TwoBodyDecayGen::find_leaf_nodes(std::vector<std::queue<chBFpair> > brfrVec,
-				      std::queue<chBFpair> *brfrQ)
+void TwoBodyDecayGen::find_leaf_nodes(std::vector<std::deque<chBFpair> > brfrVec,
+				      std::deque<chBFpair> *brfrQ)
 {
   // for top level call
   if (brfrQ == NULL) {
-    brfrQ = new std::queue<chBFpair>();
+    brfrQ = new std::deque<chBFpair>();
   }
 
   // loop over channels
   for (unsigned chid = 0; chid < _dauchannels.size(); ++chid) {
-    brfrQ->push(std::make_pair(chid, this->get_brfr(chid))); // channel BF
+    brfrQ->push_back(std::make_pair(chid, this->get_brfr(chid))); // channel BF
 
     // need copy when both daughters are _not_ leaves
-    std::queue<chBFpair> brfrQcopy = *brfrQ;
+    std::deque<chBFpair> brfrQcopy = *brfrQ;
 
     unsigned leafcounter(0);
     // loop over daughters for each channel

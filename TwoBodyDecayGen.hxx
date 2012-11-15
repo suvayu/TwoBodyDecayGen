@@ -13,7 +13,7 @@
 
 #include <string>
 #include <vector>
-#include <queue>
+#include <deque>
 
 #include <TH1.h>
 #include <TTree.h>
@@ -117,8 +117,8 @@ public:
 
   double get_brfr(unsigned chid);
 
-  void find_leaf_nodes(std::vector<std::queue<chBFpair> > brfrVec,
-		       std::queue<chBFpair> *brfrQ=NULL);
+  void find_leaf_nodes(std::vector<std::deque<chBFpair> > brfrVec,
+		       std::deque<chBFpair> *brfrQ=NULL);
 
   /**
    * Generate one event at a time
