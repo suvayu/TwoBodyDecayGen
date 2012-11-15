@@ -173,8 +173,9 @@ double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cl
 <tr class="memitem:a74ab5176750067c33e2ec19ae5064f97"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a74ab5176750067c33e2ec19ae5064f97"></a>
 double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTwoBodyDecayGen.html#a74ab5176750067c33e2ec19ae5064f97">_daumasses</a> [<a class="el" href="TwoBodyDecayGen_8hxx.html#a97faf5902688599e8f2e0178f7844f05">NDAUS</a>]</td></tr>
 <tr class="memdesc:a74ab5176750067c33e2ec19ae5064f97"><td class="mdescLeft">&#160;</td><td class="mdescRight">Array of the two daughter masses. <br/></td></tr>
-<tr class="memitem:aefe48903d498674ba257b4cb4b5c6244"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classTwoBodyDecayGen.html#a2a40fba79de5858ac925f0879e6f0dcd">DauNodeVec</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTwoBodyDecayGen.html#aefe48903d498674ba257b4cb4b5c6244">_dauchannels</a></td></tr>
-<tr class="memdesc:aefe48903d498674ba257b4cb4b5c6244"><td class="mdescLeft">&#160;</td><td class="mdescRight">Decay channels with B.F.  <a href="#aefe48903d498674ba257b4cb4b5c6244"></a><br/></td></tr>
+<tr class="memitem:aefe48903d498674ba257b4cb4b5c6244"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aefe48903d498674ba257b4cb4b5c6244"></a>
+<a class="el" href="classTwoBodyDecayGen.html#a2a40fba79de5858ac925f0879e6f0dcd">DauNodeVec</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTwoBodyDecayGen.html#aefe48903d498674ba257b4cb4b5c6244">_dauchannels</a></td></tr>
+<tr class="memdesc:aefe48903d498674ba257b4cb4b5c6244"><td class="mdescLeft">&#160;</td><td class="mdescRight">Decay channels with BF (stored as pointers) <br/></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2><a name="pri-static-attribs"></a>
 Static Private Attributes</h2></td></tr>
@@ -434,7 +435,7 @@ static unsigned long long&#160;</td><td class="memItemRight" valign="bottom"><a 
 </div><div class="memdoc">
 
 <p>Find leaf branches or decay nodes. </p>
-<p>The method TwoBodyDecayGen::find_leaf_node(..), traverses the decay tree and extracts the branching fraction from each node into a queue. It stops the queue everytime a leaf branch is encountered. The queue is the saved into a vector. The vector will have an entry for each leaf branch or leaf decay node. Note that a leaf decay node has two leaf branches, this is counted as one channel. </p>
+<p>This method traverses the decay tree and extracts the branching fraction and the channel id from each node into a double-ended queue. It stops the queue everytime a leaf branch is encountered. The queue is then saved into a vector. The vector will have an entry for each leaf branch or leaf decay node. Note that a leaf decay node has two leaf branches, this is counted as one entry channel (single entry in the vector). </p>
 <pre class="fragment">                        mother
                        /      \
                       /        \
@@ -490,7 +491,7 @@ static unsigned long long&#160;</td><td class="memItemRight" valign="bottom"><a 
   <table class="params">
     <tr><td class="paramname">momp</td><td>Mother 4-momentum </td></tr>
     <tr><td class="paramname">particle_lvs</td><td>std::vector used to return generated 4-momenta </td></tr>
-    <tr><td class="paramname">ich</td><td>chQ Queue with channels to generate</td></tr>
+    <tr><td class="paramname">chQ</td><td>Queue with channels to generate</td></tr>
   </table>
   </dd>
 </dl>
@@ -619,30 +620,6 @@ static unsigned long long&#160;</td><td class="memItemRight" valign="bottom"><a 
 
 </div>
 </div>
-<hr/><h2>Member Data Documentation</h2>
-<a class="anchor" id="aefe48903d498674ba257b4cb4b5c6244"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classTwoBodyDecayGen.html#a2a40fba79de5858ac925f0879e6f0dcd">DauNodeVec</a> TwoBodyDecayGen::_dauchannels</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Decay channels with B.F. </p>
-<p>(stored as pointers) </p>
-
-</div>
-</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li><a class="el" href="TwoBodyDecayGen_8hxx_source.html">TwoBodyDecayGen.hxx</a></li>
 <li><a class="el" href="TwoBodyDecayGen_8cxx.html">TwoBodyDecayGen.cxx</a></li>
@@ -653,7 +630,7 @@ static unsigned long long&#160;</td><td class="memItemRight" valign="bottom"><a 
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classTwoBodyDecayGen.html">TwoBodyDecayGen</a></li>
-    <li class="footer">Generated on Thu Nov 15 2012 14:32:48 for TwoBodyDecayGen by
+    <li class="footer">Generated on Thu Nov 15 2012 15:08:36 for TwoBodyDecayGen by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.1.1 </li>
   </ul>
