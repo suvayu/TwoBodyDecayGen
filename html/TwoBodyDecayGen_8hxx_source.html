@@ -114,57 +114,67 @@ $(document).ready(function(){initNavTree('TwoBodyDecayGen_8hxx.html','');});
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor">#include &lt;string&gt;</span></div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#include &lt;vector&gt;</span></div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="preprocessor">#include &lt;TH1.h&gt;</span></div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#include &lt;TTree.h&gt;</span></div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#include &lt;TLorentzVector.h&gt;</span></div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#include &lt;TGenPhaseSpace.h&gt;</span></div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;</div>
-<div class="line"><a name="l00022"></a><span class="lineno"><a class="code" href="TwoBodyDecayGen_8hxx.html#a97faf5902688599e8f2e0178f7844f05">   22</a></span>&#160;<span class="preprocessor">#define NDAUS 2                 </span></div>
-<div class="line"><a name="l00045"></a><span class="lineno"><a class="code" href="classTwoBodyDecayGen.html">   45</a></span>&#160;<span class="preprocessor">class TwoBodyDecayGen {</span></div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="preprocessor"></span><span class="keyword">public</span>:</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;</div>
-<div class="line"><a name="l00048"></a><span class="lineno"><a class="code" href="classTwoBodyDecayGen.html#a35d23037431d8f1a2bf40c91f3f141df">   48</a></span>&#160;  <span class="keyword">typedef</span> std::pair&lt;std::vector&lt;TwoBodyDecayGen*&gt;, <span class="keywordtype">double</span>&gt; <a class="code" href="classTwoBodyDecayGen.html#a35d23037431d8f1a2bf40c91f3f141df" title="Node with B.F.">DauNode</a>; </div>
-<div class="line"><a name="l00049"></a><span class="lineno"><a class="code" href="classTwoBodyDecayGen.html#a2a40fba79de5858ac925f0879e6f0dcd">   49</a></span>&#160;  <span class="keyword">typedef</span> std::vector&lt;DauNode&gt; <a class="code" href="classTwoBodyDecayGen.html#a2a40fba79de5858ac925f0879e6f0dcd" title="Vector of nodes (channels)">DauNodeVec</a>; </div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;  <a class="code" href="classTwoBodyDecayGen.html" title="This class defines a sequential 2-body decay tree and generates events using the ROOT class TGenPhase...">TwoBodyDecayGen</a>(<span class="keywordtype">double</span> mommass, <span class="keywordtype">double</span> dau1mass, <span class="keywordtype">double</span> dau2mass,</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;                  <a class="code" href="classTwoBodyDecayGen.html" title="This class defines a sequential 2-body decay tree and generates events using the ROOT class TGenPhase...">TwoBodyDecayGen</a> *dau1=NULL,</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;                  <a class="code" href="classTwoBodyDecayGen.html" title="This class defines a sequential 2-body decay tree and generates events using the ROOT class TGenPhase...">TwoBodyDecayGen</a> *dau2=NULL);</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;  <a class="code" href="classTwoBodyDecayGen.html" title="This class defines a sequential 2-body decay tree and generates events using the ROOT class TGenPhase...">TwoBodyDecayGen</a>(<span class="keywordtype">double</span> mommass, <span class="keywordtype">double</span> *daumasses,</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;                  <a class="code" href="classTwoBodyDecayGen.html" title="This class defines a sequential 2-body decay tree and generates events using the ROOT class TGenPhase...">TwoBodyDecayGen</a> *dau1=NULL,</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;                  <a class="code" href="classTwoBodyDecayGen.html" title="This class defines a sequential 2-body decay tree and generates events using the ROOT class TGenPhase...">TwoBodyDecayGen</a> *dau2=NULL);</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;  <a class="code" href="classTwoBodyDecayGen.html" title="This class defines a sequential 2-body decay tree and generates events using the ROOT class TGenPhase...">TwoBodyDecayGen</a>(<span class="keywordtype">double</span> *masses, <span class="keywordtype">unsigned</span> nparts);</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;  ~<a class="code" href="classTwoBodyDecayGen.html" title="This class defines a sequential 2-body decay tree and generates events using the ROOT class TGenPhase...">TwoBodyDecayGen</a>() {}</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#include &lt;deque&gt;</span></div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#include &lt;TH1.h&gt;</span></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#include &lt;TTree.h&gt;</span></div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#include &lt;TLorentzVector.h&gt;</span></div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#include &lt;TGenPhaseSpace.h&gt;</span></div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;</div>
+<div class="line"><a name="l00023"></a><span class="lineno"><a class="code" href="TwoBodyDecayGen_8hxx.html#a97faf5902688599e8f2e0178f7844f05">   23</a></span>&#160;<span class="preprocessor">#define NDAUS 2                 </span></div>
+<div class="line"><a name="l00046"></a><span class="lineno"><a class="code" href="classTwoBodyDecayGen.html">   46</a></span>&#160;<span class="preprocessor">class TwoBodyDecayGen {</span></div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="preprocessor"></span><span class="keyword">public</span>:</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
+<div class="line"><a name="l00049"></a><span class="lineno"><a class="code" href="classTwoBodyDecayGen.html#a35d23037431d8f1a2bf40c91f3f141df">   49</a></span>&#160;  <span class="keyword">typedef</span> std::pair&lt;std::vector&lt;TwoBodyDecayGen*&gt;, <span class="keywordtype">double</span>&gt; <a class="code" href="classTwoBodyDecayGen.html#a35d23037431d8f1a2bf40c91f3f141df" title="Node with B.F.">DauNode</a>; </div>
+<div class="line"><a name="l00050"></a><span class="lineno"><a class="code" href="classTwoBodyDecayGen.html#a2a40fba79de5858ac925f0879e6f0dcd">   50</a></span>&#160;  <span class="keyword">typedef</span> std::vector&lt;DauNode&gt; <a class="code" href="classTwoBodyDecayGen.html#a2a40fba79de5858ac925f0879e6f0dcd" title="Vector of nodes (channels)">DauNodeVec</a>; </div>
+<div class="line"><a name="l00051"></a><span class="lineno"><a class="code" href="classTwoBodyDecayGen.html#a8df8877f9ad9f4b02afb15b0ba21d1c1">   51</a></span>&#160;  <span class="keyword">typedef</span> std::pair&lt;unsigned, double&gt; <a class="code" href="classTwoBodyDecayGen.html#a8df8877f9ad9f4b02afb15b0ba21d1c1" title="Channel id and B.F.">chBFpair</a>; </div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;  <a class="code" href="classTwoBodyDecayGen.html" title="This class defines a sequential 2-body decay tree and generates events using the ROOT class TGenPhase...">TwoBodyDecayGen</a>(<span class="keywordtype">double</span> mommass, <span class="keywordtype">double</span> dau1mass, <span class="keywordtype">double</span> dau2mass,</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;                  <a class="code" href="classTwoBodyDecayGen.html" title="This class defines a sequential 2-body decay tree and generates events using the ROOT class TGenPhase...">TwoBodyDecayGen</a> *dau1=NULL,</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;                  <a class="code" href="classTwoBodyDecayGen.html" title="This class defines a sequential 2-body decay tree and generates events using the ROOT class TGenPhase...">TwoBodyDecayGen</a> *dau2=NULL);</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;  <a class="code" href="classTwoBodyDecayGen.html" title="This class defines a sequential 2-body decay tree and generates events using the ROOT class TGenPhase...">TwoBodyDecayGen</a>(<span class="keywordtype">double</span> mommass, <span class="keywordtype">double</span> *daumasses,</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;                  <a class="code" href="classTwoBodyDecayGen.html" title="This class defines a sequential 2-body decay tree and generates events using the ROOT class TGenPhase...">TwoBodyDecayGen</a> *dau1=NULL,</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;                  <a class="code" href="classTwoBodyDecayGen.html" title="This class defines a sequential 2-body decay tree and generates events using the ROOT class TGenPhase...">TwoBodyDecayGen</a> *dau2=NULL);</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;  <a class="code" href="classTwoBodyDecayGen.html" title="This class defines a sequential 2-body decay tree and generates events using the ROOT class TGenPhase...">TwoBodyDecayGen</a>(<span class="keywordtype">double</span> *masses, <span class="keywordtype">unsigned</span> nparts);</div>
 <div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;  <span class="keywordtype">bool</span> add_decay_channel(<span class="keywordtype">double</span> *masses, <span class="keywordtype">unsigned</span> nparts,</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;                         <span class="keywordtype">double</span> brfr=1.0);</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;  <span class="keywordtype">double</span> generate(TLorentzVector &amp;momp,</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;                  std::vector&lt;TLorentzVector&gt; &amp;particle_lvs,</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;                  <span class="keywordtype">unsigned</span> ich=0);</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;</div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;  TTree* get_event_tree(<span class="keywordtype">unsigned</span> nevents, TH1 *hmomp);</div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;</div>
-<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;  <span class="keywordtype">void</span> print(<span class="keywordtype">unsigned</span> indent=0);</div>
-<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;</div>
-<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;</div>
-<div class="line"><a name="l00146"></a><span class="lineno"><a class="code" href="classTwoBodyDecayGen.html#ab246eb694511036be06ec680d21aedf2">  146</a></span>&#160;  TGenPhaseSpace <a class="code" href="classTwoBodyDecayGen.html#ab246eb694511036be06ec680d21aedf2" title="Generator for the current decay vertex.">_generator</a>;    </div>
-<div class="line"><a name="l00147"></a><span class="lineno"><a class="code" href="classTwoBodyDecayGen.html#a64a44d3e43bbb2860909304cf1435a07">  147</a></span>&#160;  <span class="keywordtype">double</span> <a class="code" href="classTwoBodyDecayGen.html#a64a44d3e43bbb2860909304cf1435a07" title="Mother particle mass for the current decay vertex.">_mommass</a>;              </div>
-<div class="line"><a name="l00148"></a><span class="lineno"><a class="code" href="classTwoBodyDecayGen.html#a74ab5176750067c33e2ec19ae5064f97">  148</a></span>&#160;  <span class="keywordtype">double</span> _daumasses[<a class="code" href="TwoBodyDecayGen_8hxx.html#a97faf5902688599e8f2e0178f7844f05" title="Number of daughters, fixed to 2.">NDAUS</a>];     </div>
-<div class="line"><a name="l00149"></a><span class="lineno"><a class="code" href="classTwoBodyDecayGen.html#aefe48903d498674ba257b4cb4b5c6244">  149</a></span>&#160;  <a class="code" href="classTwoBodyDecayGen.html#a2a40fba79de5858ac925f0879e6f0dcd" title="Vector of nodes (channels)">DauNodeVec</a> <a class="code" href="classTwoBodyDecayGen.html#aefe48903d498674ba257b4cb4b5c6244" title="Decay channels with B.F.">_dauchannels</a>;      </div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;};</div>
-<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;</div>
-<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;<span class="preprocessor">#endif  // TWOBODYDECAYGEN_HXX</span></div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;  ~<a class="code" href="classTwoBodyDecayGen.html" title="This class defines a sequential 2-body decay tree and generates events using the ROOT class TGenPhase...">TwoBodyDecayGen</a>() {}</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;  <span class="keywordtype">bool</span> add_decay_channel(<span class="keywordtype">double</span> *masses, <span class="keywordtype">unsigned</span> nparts,</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;                         <span class="keywordtype">double</span> brfr);</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;  <a class="code" href="classTwoBodyDecayGen.html" title="This class defines a sequential 2-body decay tree and generates events using the ROOT class TGenPhase...">TwoBodyDecayGen</a>* get_daughter(<span class="keywordtype">unsigned</span> chid, <span class="keywordtype">unsigned</span> dauid);</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;  <span class="keywordtype">double</span> get_brfr(<span class="keywordtype">unsigned</span> chid);</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;</div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;  <span class="keywordtype">void</span> find_leaf_nodes(std::vector&lt;std::deque&lt;chBFpair&gt; &gt; brfrVec,</div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;                       std::deque&lt;chBFpair&gt; *brfrQ=NULL);</div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;</div>
+<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;  <span class="keywordtype">double</span> generate(TLorentzVector &amp;momp,</div>
+<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;                  std::vector&lt;TLorentzVector&gt; &amp;particle_lvs,</div>
+<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;                  std::deque&lt;chBFpair&gt; chQ);</div>
+<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;</div>
+<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;  TTree* get_event_tree(<span class="keywordtype">unsigned</span> nevents, TH1 *hmomp);</div>
+<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;</div>
+<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;  <span class="keywordtype">void</span> print(<span class="keywordtype">unsigned</span> indent=0);</div>
+<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;</div>
+<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;</div>
+<div class="line"><a name="l00195"></a><span class="lineno"><a class="code" href="classTwoBodyDecayGen.html#a7f4f83957e723aefeefc8260ad9f57b2">  195</a></span>&#160;  <span class="keyword">static</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> <span class="keywordtype">long</span> <a class="code" href="classTwoBodyDecayGen.html#a7f4f83957e723aefeefc8260ad9f57b2" title="Debug message counter.">_count</a>; </div>
+<div class="line"><a name="l00196"></a><span class="lineno"><a class="code" href="classTwoBodyDecayGen.html#ab246eb694511036be06ec680d21aedf2">  196</a></span>&#160;  TGenPhaseSpace <a class="code" href="classTwoBodyDecayGen.html#ab246eb694511036be06ec680d21aedf2" title="Generator for the current decay vertex.">_generator</a>;    </div>
+<div class="line"><a name="l00197"></a><span class="lineno"><a class="code" href="classTwoBodyDecayGen.html#a64a44d3e43bbb2860909304cf1435a07">  197</a></span>&#160;  <span class="keywordtype">double</span> <a class="code" href="classTwoBodyDecayGen.html#a64a44d3e43bbb2860909304cf1435a07" title="Mother particle mass for the current decay vertex.">_mommass</a>;              </div>
+<div class="line"><a name="l00198"></a><span class="lineno"><a class="code" href="classTwoBodyDecayGen.html#a74ab5176750067c33e2ec19ae5064f97">  198</a></span>&#160;  <span class="keywordtype">double</span> _daumasses[<a class="code" href="TwoBodyDecayGen_8hxx.html#a97faf5902688599e8f2e0178f7844f05" title="Number of daughters, fixed to 2.">NDAUS</a>];     </div>
+<div class="line"><a name="l00199"></a><span class="lineno"><a class="code" href="classTwoBodyDecayGen.html#aefe48903d498674ba257b4cb4b5c6244">  199</a></span>&#160;  <a class="code" href="classTwoBodyDecayGen.html#a2a40fba79de5858ac925f0879e6f0dcd" title="Vector of nodes (channels)">DauNodeVec</a> <a class="code" href="classTwoBodyDecayGen.html#aefe48903d498674ba257b4cb4b5c6244" title="Decay channels with B.F.">_dauchannels</a>;      </div>
+<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;};</div>
+<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;</div>
+<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;<span class="preprocessor">#endif  // TWOBODYDECAYGEN_HXX</span></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="TwoBodyDecayGen_8hxx.html">TwoBodyDecayGen.hxx</a></li>
-    <li class="footer">Generated on Thu Nov 8 2012 16:25:38 for TwoBodyDecayGen by
+    <li class="footer">Generated on Thu Nov 15 2012 13:56:59 for TwoBodyDecayGen by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.1.1 </li>
   </ul>
