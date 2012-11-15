@@ -113,10 +113,50 @@ public:
   bool add_decay_channel(double *masses, unsigned nparts,
 			 double brfr);
 
+  /**
+   * Return requested daughter decay node
+   *
+   * @param chid Decay channel id
+   * @param dauid Daughter number (0 or 1)
+   *
+   * @return Pointer to the daughter decay node
+   */
   TwoBodyDecayGen* get_daughter(unsigned chid, unsigned dauid);
 
+  /**
+   * Return BF for decay channel
+   *
+   * @param chid Decay channel id
+   *
+   * @return Branching fraction for decay channel
+   */
   double get_brfr(unsigned chid);
 
+  /**
+   * Find leaf branches or decay nodes.
+   *
+   * This method traverses the decay tree and extracts the branching
+   * fraction and the channel id from each node into a double-ended
+   * queue.  It stops the queue everytime a leaf branch is
+   * encountered.  The queue is then saved into a vector.  The vector
+   * will have an entry for each leaf branch or leaf decay node.  Note
+   * that a leaf decay node has two leaf branches, this is counted as
+   * one entry channel (single entry in the vector).
+   *
+   *                             mother
+   *                            /      \
+   *                           /        \
+   *                          d1        d2
+   *                         /  \      /  \
+   *                        /    \    /    \
+   *     (leaf decay node) d1    d2  d3    d4 (leaf branch)
+   *                      /  \
+   *                     /    \
+   *                    d1    d2
+   *
+   * @param brfrVec Vector with deque for each leaf branch / decay node
+   * @param brfrQ Pointer to deque for each leaf branch / decay node
+   */
   void find_leaf_nodes(std::vector<std::deque<chBFpair> > brfrVec,
 		       std::deque<chBFpair> *brfrQ=NULL);
 
@@ -125,7 +165,7 @@ public:
    *
    * @param momp Mother 4-momentum
    * @param particle_lvs std::vector used to return generated 4-momenta
-   * @param ich Decay channel to generate
+   * @param chQ Queue with channels to generate
    *
    * @return Event weight
    */
@@ -156,7 +196,7 @@ private:
   TGenPhaseSpace _generator;	/**< Generator for the current decay vertex */
   double _mommass;		/**< Mother particle mass for the current decay vertex */
   double _daumasses[NDAUS];	/**< Array of the two daughter masses */
-  DauNodeVec _dauchannels;	/**< Decay channels with B.F. (stored as pointers) */
+  DauNodeVec _dauchannels;	/**< Decay channels with BF (stored as pointers) */
 };
 
 #endif	// TWOBODYDECAYGEN_HXX
