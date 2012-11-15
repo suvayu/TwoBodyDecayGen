@@ -212,8 +212,10 @@ void TwoBodyDecayGen::find_leaf_nodes(std::vector<std::deque<chBFpair> > brfrVec
 
 double TwoBodyDecayGen::generate(TLorentzVector &momp,
 				 std::vector<TLorentzVector> &particle_lvs,
-				 int ich)
+				 std::deque<chBFpair> chQ)
 {
+  unsigned ich(chQ.front().first);
+  chQ.pop_front();
   // setup decay and generate
   if (not _generator.SetDecay(momp, NDAUS, _daumasses)) {
     return -1.0;
@@ -227,20 +229,10 @@ double TwoBodyDecayGen::generate(TLorentzVector &momp,
 
   // propagate generate to daughters
   for (unsigned j = 0; j < NDAUS; ++j) {
-    if (ich < 0) {		// For daughter of daughters
-      for (unsigned i = 0; i < _dauchannels.size(); ++i) {
-	if (_dauchannels[i].first[j]) {
-	  evt_wt += _dauchannels[i].first[j]->generate(particle_lvs[j+1],
-						       particle_lvs, -1);
-	  evt_wt /= 2.0;
-	}
-      }
-    } else {
-      if (_dauchannels[ich].first[j]) {
-	evt_wt += _dauchannels[ich].first[j]->generate(particle_lvs[j+1],
-						       particle_lvs, -1);
-	evt_wt /= 2.0;
-      }
+    if (_dauchannels[ich].first[j]) {
+      evt_wt += _dauchannels[ich].first[j]->generate(particle_lvs[j+1],
+						     particle_lvs, chQ);
+      evt_wt /= 2.0;
     }
   } // FIXME: the handling of weights is probably wrong
 
@@ -266,26 +258,30 @@ TTree* TwoBodyDecayGen::get_event_tree(unsigned nevents, TH1 *hmomp)
   TLorentzVector momp(0.0, 0.0, 4.0, _mommass);
   unsigned eff_nevents(0);
 
-  // FIXME: Does not consider branching factions beyond first daughter
-  for (unsigned j = 0; j < _dauchannels.size(); ++j) {
-    // FIXME: Is this multiplication correct?
-    eff_nevents = _dauchannels[j].second * nevents;
+  std::vector<std::deque<chBFpair> > brfrVec;
+  this->find_leaf_nodes(brfrVec);
 
+  BOOST_FOREACH(std::deque<chBFpair> chQ, brfrVec) {
+    double eff_brfr(1.0);
+    BOOST_FOREACH(chBFpair ch, chQ) {
+      eff_brfr *= ch.second;
+    }
+
+    eff_nevents = eff_brfr * nevents;
     for (unsigned i = 0; i < eff_nevents; ++i) {
       particle_lvs.clear();
-
       // generate event and fill tree
-      momp.SetXYZM( 0.0, 0.0, hmomp->GetRandom(), 5.367);
+      momp.SetXYZM( 0.0, 0.0, hmomp->GetRandom(), _mommass);
       particle_lvs.push_back(momp);
-      evt_wt = this->generate(momp, particle_lvs, j);
+      evt_wt = this->generate(momp, particle_lvs, chQ);
       if (evt_wt < 0) {
 	std::cout << "Decay not permitted by kinematics, skipping!"
 		  << std::endl;
 	continue;
       }
       decaytree->Fill();
-    }
-  }
+    } // end of loop over events per leaf branch/decay node
+  }   // end of loop over leaves
 
   return decaytree;
 }
