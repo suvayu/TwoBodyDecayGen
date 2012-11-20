@@ -143,22 +143,29 @@ public:
    * that a leaf decay node has two leaf branches, this is counted as
    * one entry channel (single entry in the vector).
    *
-   *                             mother
-   *                            /      \
-   *                           /        \
-   *                          d1        d2
-   *                         /  \      /  \
-   *                        /    \    /    \
-   *     (leaf decay node) d1    d2  d3    d4 (leaf branch)
-   *                      /  \
-   *                     /    \
-   *                    d1    d2
+   *       (recursion depth)
+   *
+   *       L3  - - -                     mother
+   *                                    /      \
+   *                                   /        \
+   *       L2  - - -                  d1        d2 (leaf node)
+   *                                 /  \      /  \
+   *                                /    \    /    \
+   *       L1  - - -   (leaf node) d1    d2  d3    d4
+   *                              /  \
+   *                             /    \
+   *       L0  - - -            d1    d2
+   *
+   * <b>NB:</b> end points (d{2..4} @ L1 or d{1,2} @ L0) are stored as
+   * NULL pointers
    *
    * @param brfrVec Vector with deque for each leaf branch / decay node
    * @param brfrQ Pointer to deque for each leaf branch / decay node
+   *
+   * @return Depth where leaf node was found (-ve numbers are invalid)
    */
-  void find_leaf_nodes(std::vector<std::deque<chBFpair> > brfrVec,
-		       std::deque<chBFpair> *brfrQ=NULL);
+  int find_leaf_nodes(std::vector<std::deque<chBFpair> > &brfrVec,
+		       std::deque<chBFpair> &brfrQ);
 
   /**
    * Generate one event at a time

@@ -199,20 +199,16 @@ double TwoBodyDecayGen::get_brfr(unsigned chid)
 }
 
 
-void TwoBodyDecayGen::find_leaf_nodes(std::vector<std::deque<chBFpair> > &brfrVec,
+int TwoBodyDecayGen::find_leaf_nodes(std::vector<std::deque<chBFpair> > &brfrVec,
 				      std::deque<chBFpair> &brfrQ)
 {
-  DEBUG("Passed Qptr: " << &brfrQ);
-  printQ("Passed ", brfrQ);
-  DEBUG("_dauchannels.size(): " << _dauchannels.size());
+  // need copy just before leaf node to continue on alternate branch
   std::deque<chBFpair> brfrQcopy(brfrQ);
 
+  int status(-1);
   // loop over channels
   for (unsigned chid = 0; chid < _dauchannels.size(); ++chid) {
-    // FIXME: copy not working, copying gibberish
-    // need copy when both daughters are _not_ leaves
     brfrQ.push_back(std::make_pair(chid, this->get_brfr(chid))); // channel BF
-    DEBUG("Ch id: " << chid);
 
     unsigned leafcounter(0);
     // loop over daughters for each channel
@@ -221,29 +217,27 @@ void TwoBodyDecayGen::find_leaf_nodes(std::vector<std::deque<chBFpair> > &brfrVe
 
       // recursive calls
       if (dau) { // not a leaf node, propagate call
-	dau->find_leaf_nodes(brfrVec, brfrQ);
+	status = dau->find_leaf_nodes(brfrVec, brfrQ);
+	status++;
       } else { // leaf branch
 	++leafcounter;
-	DEBUG("leafcounter: " << leafcounter);
       }
-      if (leafcounter == 2) { // leaf decay node
-	brfrVec.push_back(brfrQ);
-	// FIXME: probably this does not work
+
+      if (status > 0) {
 	brfrQ = brfrQcopy;
-	DEBUG("Leaf node found!");
+      }
+
+      if (leafcounter == 2) { // leaf node
+	status = 0;
+	// // FIXME: Is a pop needed?  Can this be used to get the
+	// // pointer later?
+	// brfrQ.pop_back();
+	brfrVec.push_back(brfrQ);
       }
     } // end daughter loop
   } // end channel loop
 
-  if (_dauchannels.empty()) { // leaf decay node
-    brfrVec.push_back(brfrQ);
-    DEBUG("Leaf node found!");
-  }
-
-  printQ("End ", brfrQ);
-
-  DEBUG("Vector size: " << brfrVec.size());
-  return;
+  return status;
 }
 
 
