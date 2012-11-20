@@ -91,8 +91,8 @@ public:
    * 3. Bs → Ds*(Dsπ)π
    *    double masses[5] = {Bs, Ds*, π, Ds, π};
    *
-   * NB: Only one level of decay vertices have been tested at the
-   * moment.
+   * <b>NB:</b> Only one level of decay vertices have been tested at
+   * the moment.
    *
    * @param masses Array of doubles with mass of all the particles in GeV/c²
    * @param nparts Number of particles in the decay tree (length of the array)
