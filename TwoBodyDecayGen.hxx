@@ -192,6 +192,9 @@ public:
 
 private:
 
+  void _printQ(std::string prefix, std::deque<chBFpair> queue);
+  void _printQ(std::string prefix, std::vector<std::deque<chBFpair> > queue);
+
   static unsigned long long _count; /**< Debug message counter */
   TGenPhaseSpace _generator;	/**< Generator for the current decay vertex */
   double _mommass;		/**< Mother particle mass for the current decay vertex */

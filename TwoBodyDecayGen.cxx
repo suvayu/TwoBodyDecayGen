@@ -51,7 +51,7 @@
   _count++;
 
 
-void TwoBodyDecayGen::printQ(std::string prefix, std::deque<chBFpair> queue)
+void TwoBodyDecayGen::_printQ(std::string prefix, std::deque<chBFpair> queue)
 {
   DEBUG(prefix << "Q size: " << queue.size());
   BOOST_FOREACH(chBFpair pair, queue) {
@@ -61,11 +61,11 @@ void TwoBodyDecayGen::printQ(std::string prefix, std::deque<chBFpair> queue)
 }
 
 
-void TwoBodyDecayGen::printQ(std::string prefix, std::vector<std::deque<chBFpair> > QVec)
+void TwoBodyDecayGen::_printQ(std::string prefix, std::vector<std::deque<chBFpair> > QVec)
 {
   DEBUG(prefix << "V size: " << QVec.size());
   BOOST_FOREACH(std::deque<chBFpair> queue, QVec) {
-    printQ(prefix, queue);
+    _printQ(prefix, queue);
   }
   return;
 }
@@ -313,7 +313,7 @@ TTree* TwoBodyDecayGen::get_event_tree(unsigned nevents, TH1 *hmomp)
   // brfrQ.push_back(std::make_pair(1, 0.81));
   DEBUG("Initial Qptr: " << &brfrQ);
   this->find_leaf_nodes(brfrVec, brfrQ);
-  this->printQ("Final ", brfrVec);
+  this->_printQ("Final ", brfrVec);
 
   BOOST_FOREACH(std::deque<chBFpair> chQ, brfrVec) {
     double eff_brfr(1.0);
