@@ -97,7 +97,9 @@ int main(int argc, char* argv[])
   }
 
   TwoBodyDecayGen generator(&masses[0], masses.size());
-  generator.add_decay_channel(&masses2[0], masses2.size(), 0.05);
+  if ("DsstPi" == mode) {
+    generator.add_decay_channel(&masses2[0], masses2.size(), 0.05);
+  }
   generator.print();
 
   // generate, print summary and dump to ROOT file
