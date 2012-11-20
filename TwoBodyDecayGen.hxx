@@ -199,7 +199,20 @@ public:
 
 private:
 
+  /**
+   * Print queue for debugging
+   *
+   * @param prefix String prefix in output
+   * @param queue Queue to print
+   */
   void _printQ(std::string prefix, std::deque<chBFpair> queue);
+
+  /**
+   * Print vector of queues for debugging
+   *
+   * @param prefix String prefix in output
+   * @param queue Vector of queues to print
+   */
   void _printQ(std::string prefix, std::vector<std::deque<chBFpair> > queue);
 
   static unsigned long long _count; /**< Debug message counter */
