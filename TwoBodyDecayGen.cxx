@@ -354,16 +354,15 @@ void TwoBodyDecayGen::print(unsigned indent) {
   std::string prefix(indent * 2, ' ');
   std::cout << prefix << "mommass: " << _mommass << ", daumass: ("
 	    << _daumasses[0] << "," << _daumasses[1] << ") with "
-	    << _dauchannels.size() << " channels." << std::endl;
+	    << _dauchannels.size() << " daughter channel(s)." << std::endl;
 
   BOOST_FOREACH(DauNode node, _dauchannels) {
     if (not node.first.empty()) {
-      std::cout << "Channel BF: " << node.second << ", # of daughters: "
-		<< node.first.size() << std::endl;
+      std::cout << prefix << "Channel BF: " << node.second << std::endl;
     }
     for (unsigned j = 0; j < NDAUS; ++j) {
       if (node.first[j]) {
-	std::cout << prefix << "Dau " << j << ":" << std::endl;
+	std::cout << prefix << "Node " << j << ":" << std::endl;
 	node.first[j]->print(indent + 1);
       }
     }
