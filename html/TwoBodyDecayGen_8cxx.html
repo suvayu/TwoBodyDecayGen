@@ -114,6 +114,7 @@ $(document).ready(function(){initNavTree('TwoBodyDecayGen_8cxx.html','');});
 <p>Implementation of <a class="el" href="classTwoBodyDecayGen.html" title="This class defines a sequential 2-body decay tree and generates events using the ROOT class TGenPhase...">TwoBodyDecayGen</a>.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;iostream&gt;</code><br/>
+<code>#include &lt;iomanip&gt;</code><br/>
 <code>#include &lt;boost/foreach.hpp&gt;</code><br/>
 <code>#include &lt;TRandom3.h&gt;</code><br/>
 <code>#include &quot;<a class="el" href="TwoBodyDecayGen_8hxx_source.html">TwoBodyDecayGen.hxx</a>&quot;</code><br/>
@@ -150,8 +151,8 @@ Macros</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;DEBUG: [&quot;</span> &lt;&lt; _count &lt;&lt; <span class="stringliteral">&quot;] (&quot;</span> &lt;&lt; __func__ &lt;&lt; <span class="stringliteral">&quot;) &quot;</span> \</div>
-<div class="line">  &lt;&lt; MSG &lt;&lt; std::endl; \</div>
+<b>Value:</b><div class="fragment"><div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;DEBUG: [&quot;</span> &lt;&lt; std::setw(4) &lt;&lt; std::setfill(<span class="charliteral">&#39;0&#39;</span>) &lt;&lt; _count \</div>
+<div class="line">  &lt;&lt; <span class="stringliteral">&quot;] (&quot;</span> &lt;&lt; __func__ &lt;&lt; <span class="stringliteral">&quot;) &quot;</span> &lt;&lt; MSG &lt;&lt; std::endl; \</div>
 <div class="line">  _count++;</div>
 </div><!-- fragment -->
 <p>Debug statement with a counter. </p>
@@ -171,8 +172,8 @@ Macros</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;ERROR: [&quot;</span> &lt;&lt; _count &lt;&lt; <span class="stringliteral">&quot;] (&quot;</span> &lt;&lt; __func__ &lt;&lt; <span class="stringliteral">&quot;) &quot;</span> \</div>
-<div class="line">  &lt;&lt; MSG &lt;&lt; std::endl; \</div>
+<b>Value:</b><div class="fragment"><div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;ERROR: [&quot;</span> &lt;&lt; std::setw(4) &lt;&lt; std::setfill(<span class="charliteral">&#39;0&#39;</span>) &lt;&lt; _count \</div>
+<div class="line">  &lt;&lt; <span class="stringliteral">&quot;] (&quot;</span> &lt;&lt; __func__ &lt;&lt; <span class="stringliteral">&quot;) &quot;</span>  &lt;&lt; MSG &lt;&lt; std::endl; \</div>
 <div class="line">  _count++;</div>
 </div><!-- fragment -->
 <p>Error message with a counter. </p>
@@ -192,8 +193,8 @@ Macros</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;WARNING: [&quot;</span> &lt;&lt; _count &lt;&lt; <span class="stringliteral">&quot;] (&quot;</span> &lt;&lt; __func__ &lt;&lt; <span class="stringliteral">&quot;) &quot;</span> \</div>
-<div class="line">  &lt;&lt; MSG &lt;&lt; std::endl; \</div>
+<b>Value:</b><div class="fragment"><div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;WARNING: [&quot;</span> &lt;&lt; std::setw(4) &lt;&lt; std::setfill(<span class="charliteral">&#39;0&#39;</span>) &lt;&lt; _count \</div>
+<div class="line">  &lt;&lt; <span class="stringliteral">&quot;] (&quot;</span> &lt;&lt; __func__ &lt;&lt; <span class="stringliteral">&quot;) &quot;</span> &lt;&lt; MSG &lt;&lt; std::endl; \</div>
 <div class="line">  _count++;</div>
 </div><!-- fragment -->
 <p>Warning with a counter. </p>
@@ -206,7 +207,7 @@ Macros</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="TwoBodyDecayGen_8cxx.html">TwoBodyDecayGen.cxx</a></li>
-    <li class="footer">Generated on Thu Nov 15 2012 15:08:36 for TwoBodyDecayGen by
+    <li class="footer">Generated on Tue Nov 20 2012 20:59:58 for TwoBodyDecayGen by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.1.1 </li>
   </ul>

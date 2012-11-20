@@ -108,6 +108,7 @@ $(document).ready(function(){initNavTree('classTwoBodyDecayGen.html','');});
   <div class="summary">
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pri-methods">Private Member Functions</a> &#124;
 <a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="#pri-static-attribs">Static Private Attributes</a>  </div>
   <div class="headertitle">
@@ -153,14 +154,21 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:ac2bea96bcb33b65369d5714a569bf738"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return requested daughter decay node.  <a href="#ac2bea96bcb33b65369d5714a569bf738"></a><br/></td></tr>
 <tr class="memitem:a5bd19c37234d852c70bcac511437fd5a"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTwoBodyDecayGen.html#a5bd19c37234d852c70bcac511437fd5a">get_brfr</a> (unsigned chid)</td></tr>
 <tr class="memdesc:a5bd19c37234d852c70bcac511437fd5a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return BF for decay channel.  <a href="#a5bd19c37234d852c70bcac511437fd5a"></a><br/></td></tr>
-<tr class="memitem:ac14c025f0d1e30d53cd728b172fb0891"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTwoBodyDecayGen.html#ac14c025f0d1e30d53cd728b172fb0891">find_leaf_nodes</a> (std::vector&lt; std::deque&lt; <a class="el" href="classTwoBodyDecayGen.html#a8df8877f9ad9f4b02afb15b0ba21d1c1">chBFpair</a> &gt; &gt; brfrVec, std::deque&lt; <a class="el" href="classTwoBodyDecayGen.html#a8df8877f9ad9f4b02afb15b0ba21d1c1">chBFpair</a> &gt; *brfrQ=NULL)</td></tr>
-<tr class="memdesc:ac14c025f0d1e30d53cd728b172fb0891"><td class="mdescLeft">&#160;</td><td class="mdescRight">Find leaf branches or decay nodes.  <a href="#ac14c025f0d1e30d53cd728b172fb0891"></a><br/></td></tr>
+<tr class="memitem:a90a89f9490e7b3ef8ff61cb3dcfe6913"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTwoBodyDecayGen.html#a90a89f9490e7b3ef8ff61cb3dcfe6913">find_leaf_nodes</a> (std::vector&lt; std::deque&lt; <a class="el" href="classTwoBodyDecayGen.html#a8df8877f9ad9f4b02afb15b0ba21d1c1">chBFpair</a> &gt; &gt; &amp;brfrVec, std::deque&lt; <a class="el" href="classTwoBodyDecayGen.html#a8df8877f9ad9f4b02afb15b0ba21d1c1">chBFpair</a> &gt; &amp;brfrQ)</td></tr>
+<tr class="memdesc:a90a89f9490e7b3ef8ff61cb3dcfe6913"><td class="mdescLeft">&#160;</td><td class="mdescRight">Find leaf branches or decay nodes.  <a href="#a90a89f9490e7b3ef8ff61cb3dcfe6913"></a><br/></td></tr>
 <tr class="memitem:aa051cd6398859f59f58bc33d79247943"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTwoBodyDecayGen.html#aa051cd6398859f59f58bc33d79247943">generate</a> (TLorentzVector &amp;momp, std::vector&lt; TLorentzVector &gt; &amp;particle_lvs, std::deque&lt; <a class="el" href="classTwoBodyDecayGen.html#a8df8877f9ad9f4b02afb15b0ba21d1c1">chBFpair</a> &gt; chQ)</td></tr>
 <tr class="memdesc:aa051cd6398859f59f58bc33d79247943"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generate one event at a time.  <a href="#aa051cd6398859f59f58bc33d79247943"></a><br/></td></tr>
 <tr class="memitem:aa9813b658016d39188c27e36b661b620"><td class="memItemLeft" align="right" valign="top">TTree *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTwoBodyDecayGen.html#aa9813b658016d39188c27e36b661b620">get_event_tree</a> (unsigned nevents, TH1 *hmomp)</td></tr>
 <tr class="memdesc:aa9813b658016d39188c27e36b661b620"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generate arbitrary number of events.  <a href="#aa9813b658016d39188c27e36b661b620"></a><br/></td></tr>
 <tr class="memitem:a3ca11918cc73e1a1761c20f7e06127ab"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTwoBodyDecayGen.html#a3ca11918cc73e1a1761c20f7e06127ab">print</a> (unsigned indent=0)</td></tr>
 <tr class="memdesc:a3ca11918cc73e1a1761c20f7e06127ab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Print decay tree.  <a href="#a3ca11918cc73e1a1761c20f7e06127ab"></a><br/></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2><a name="pri-methods"></a>
+Private Member Functions</h2></td></tr>
+<tr class="memitem:a83e67f7f7f1ef1c8defc4eb5fc34da4a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTwoBodyDecayGen.html#a83e67f7f7f1ef1c8defc4eb5fc34da4a">_printQ</a> (std::string prefix, std::deque&lt; <a class="el" href="classTwoBodyDecayGen.html#a8df8877f9ad9f4b02afb15b0ba21d1c1">chBFpair</a> &gt; queue)</td></tr>
+<tr class="memdesc:a83e67f7f7f1ef1c8defc4eb5fc34da4a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Print queue for debugging.  <a href="#a83e67f7f7f1ef1c8defc4eb5fc34da4a"></a><br/></td></tr>
+<tr class="memitem:a101bbb9a2fb267b33621886fd66b2309"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTwoBodyDecayGen.html#a101bbb9a2fb267b33621886fd66b2309">_printQ</a> (std::string prefix, std::vector&lt; std::deque&lt; <a class="el" href="classTwoBodyDecayGen.html#a8df8877f9ad9f4b02afb15b0ba21d1c1">chBFpair</a> &gt; &gt; queue)</td></tr>
+<tr class="memdesc:a101bbb9a2fb267b33621886fd66b2309"><td class="mdescLeft">&#160;</td><td class="mdescRight">Print vector of queues for debugging.  <a href="#a101bbb9a2fb267b33621886fd66b2309"></a><br/></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
@@ -355,7 +363,7 @@ static unsigned long long&#160;</td><td class="memItemRight" valign="bottom"><a 
 <li>Bs → Ds*(Dsγ)π double masses[5] = {Bs, Ds*, π, Ds, γ};</li>
 <li>Bs → Ds*(Dsπ)π double masses[5] = {Bs, Ds*, π, Ds, π};</li>
 </ol>
-<p>NB: Only one level of decay vertices have been tested at the moment.</p>
+<p><b>NB:</b> Only one level of decay vertices have been tested at the moment.</p>
 <dl class="params"><dt>Parameters:</dt><dd>
   <table class="params">
     <tr><td class="paramname">masses</td><td>Array of doubles with mass of all the particles in GeV/c² </td></tr>
@@ -367,6 +375,92 @@ static unsigned long long&#160;</td><td class="memItemRight" valign="bottom"><a 
 </div>
 </div>
 <hr/><h2>Member Function Documentation</h2>
+<a class="anchor" id="a83e67f7f7f1ef1c8defc4eb5fc34da4a"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void TwoBodyDecayGen::_printQ </td>
+          <td>(</td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>prefix</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::deque&lt; <a class="el" href="classTwoBodyDecayGen.html#a8df8877f9ad9f4b02afb15b0ba21d1c1">chBFpair</a> &gt;&#160;</td>
+          <td class="paramname"><em>queue</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Print queue for debugging. </p>
+<dl class="params"><dt>Parameters:</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">prefix</td><td>String prefix in output </td></tr>
+    <tr><td class="paramname">queue</td><td>Queue to print </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="a101bbb9a2fb267b33621886fd66b2309"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void TwoBodyDecayGen::_printQ </td>
+          <td>(</td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>prefix</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; std::deque&lt; <a class="el" href="classTwoBodyDecayGen.html#a8df8877f9ad9f4b02afb15b0ba21d1c1">chBFpair</a> &gt; &gt;&#160;</td>
+          <td class="paramname"><em>queue</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Print vector of queues for debugging. </p>
+<dl class="params"><dt>Parameters:</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">prefix</td><td>String prefix in output </td></tr>
+    <tr><td class="paramname">queue</td><td>Vector of queues to print </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a class="anchor" id="a94f1a3ef58470868597d4e43d7886808"></a>
 <div class="memitem">
 <div class="memproto">
@@ -410,21 +504,21 @@ static unsigned long long&#160;</td><td class="memItemRight" valign="bottom"><a 
 
 </div>
 </div>
-<a class="anchor" id="ac14c025f0d1e30d53cd728b172fb0891"></a>
+<a class="anchor" id="a90a89f9490e7b3ef8ff61cb3dcfe6913"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void TwoBodyDecayGen::find_leaf_nodes </td>
+          <td class="memname">int TwoBodyDecayGen::find_leaf_nodes </td>
           <td>(</td>
-          <td class="paramtype">std::vector&lt; std::deque&lt; <a class="el" href="classTwoBodyDecayGen.html#a8df8877f9ad9f4b02afb15b0ba21d1c1">chBFpair</a> &gt; &gt;&#160;</td>
+          <td class="paramtype">std::vector&lt; std::deque&lt; <a class="el" href="classTwoBodyDecayGen.html#a8df8877f9ad9f4b02afb15b0ba21d1c1">chBFpair</a> &gt; &gt; &amp;&#160;</td>
           <td class="paramname"><em>brfrVec</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::deque&lt; <a class="el" href="classTwoBodyDecayGen.html#a8df8877f9ad9f4b02afb15b0ba21d1c1">chBFpair</a> &gt; *&#160;</td>
-          <td class="paramname"><em>brfrQ</em> = <code>NULL</code>&#160;</td>
+          <td class="paramtype">std::deque&lt; <a class="el" href="classTwoBodyDecayGen.html#a8df8877f9ad9f4b02afb15b0ba21d1c1">chBFpair</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>brfrQ</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -436,23 +530,27 @@ static unsigned long long&#160;</td><td class="memItemRight" valign="bottom"><a 
 
 <p>Find leaf branches or decay nodes. </p>
 <p>This method traverses the decay tree and extracts the branching fraction and the channel id from each node into a double-ended queue. It stops the queue everytime a leaf branch is encountered. The queue is then saved into a vector. The vector will have an entry for each leaf branch or leaf decay node. Note that a leaf decay node has two leaf branches, this is counted as one entry channel (single entry in the vector). </p>
-<pre class="fragment">                        mother
-                       /      \
-                      /        \
-                     d1        d2
-                    /  \      /  \
-                   /    \    /    \
-(leaf decay node) d1    d2  d3    d4 (leaf branch)
-                 /  \
-                /    \
-               d1    d2
-</pre><dl class="params"><dt>Parameters:</dt><dd>
+<pre class="fragment">  (recursion depth)
+
+  L3  - - -                     mother
+                               /      \
+                              /        \
+  L2  - - -                  d1        d2 (leaf node)
+                            /  \      /  \
+                           /    \    /    \
+  L1  - - -   (leaf node) d1    d2  d3    d4
+                         /  \
+                        /    \
+  L0  - - -            d1    d2
+</pre><p><b>NB:</b> end points (d{2..4} @ L1 or d{1,2} @ L0) are stored as NULL pointers</p>
+<dl class="params"><dt>Parameters:</dt><dd>
   <table class="params">
     <tr><td class="paramname">brfrVec</td><td>Vector with deque for each leaf branch / decay node </td></tr>
-    <tr><td class="paramname">brfrQ</td><td>Pointer to deque for each leaf branch / decay node </td></tr>
+    <tr><td class="paramname">brfrQ</td><td>Pointer to deque for each leaf branch / decay node</td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section return"><dt>Returns:</dt><dd>Depth where leaf node was found (-ve numbers are invalid) </dd></dl>
 
 </div>
 </div>
@@ -630,7 +728,7 @@ static unsigned long long&#160;</td><td class="memItemRight" valign="bottom"><a 
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classTwoBodyDecayGen.html">TwoBodyDecayGen</a></li>
-    <li class="footer">Generated on Thu Nov 15 2012 15:08:36 for TwoBodyDecayGen by
+    <li class="footer">Generated on Tue Nov 20 2012 20:59:58 for TwoBodyDecayGen by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.1.1 </li>
   </ul>
