@@ -88,8 +88,8 @@ TwoBodyDecayGen::TwoBodyDecayGen(double mommass,
   daus[0] = dau1;
   daus[1] = dau2;
 
-  DauNode priNode(daus, 1.0);
-  _dauchannels.push_back(priNode);
+  DauNode priChannel(daus, 1.0);
+  _dauchannels.push_back(priChannel);
 }
 
 
@@ -120,6 +120,10 @@ TwoBodyDecayGen::TwoBodyDecayGen(double *masses, unsigned nparts) :
 
   if (nparts > 3) {
     this->add_decay_channel(masses, nparts, 1.0);
+  } else {
+    std::vector<TwoBodyDecayGen*> daus(NDAUS, NULL);
+    DauNode priChannel(daus, 1.0);
+    _dauchannels.push_back(priChannel);
   }
 }
 
