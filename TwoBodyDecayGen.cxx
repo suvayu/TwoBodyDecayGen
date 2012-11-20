@@ -9,6 +9,7 @@
  */
 
 #include <iostream>
+#include <iomanip>
 
 #include <boost/foreach.hpp>
 
@@ -23,8 +24,8 @@
  */
 
 #define DEBUG(MSG)  \
-  std::cout << "DEBUG: [" << _count << "] (" << __func__ << ") " \
-  << MSG << std::endl; \
+  std::cout << "DEBUG: [" << std::setw(4) << std::setfill('0') << _count \
+  << "] (" << __func__ << ") " << MSG << std::endl; \
   _count++;
 
 
@@ -34,8 +35,8 @@
  */
 
 #define WARNING(MSG)                                  \
-  std::cout << "WARNING: [" << _count << "] (" << __func__ << ") " \
-  << MSG << std::endl; \
+  std::cout << "WARNING: [" << std::setw(4) << std::setfill('0') << _count \
+  << "] (" << __func__ << ") " << MSG << std::endl; \
   _count++;
 
 
@@ -45,9 +46,29 @@
  */
 
 #define ERROR(MSG)                                  \
-  std::cout << "ERROR: [" << _count << "] (" << __func__ << ") " \
-  << MSG << std::endl; \
+  std::cout << "ERROR: [" << std::setw(4) << std::setfill('0') << _count \
+  << "] (" << __func__ << ") "	<< MSG << std::endl; \
   _count++;
+
+
+void TwoBodyDecayGen::printQ(std::string prefix, std::deque<chBFpair> queue)
+{
+  DEBUG(prefix << "Q size: " << queue.size());
+  BOOST_FOREACH(chBFpair pair, queue) {
+    DEBUG(prefix << "(" << pair.first << ", " << pair.second << ")");
+  }
+  return;
+}
+
+
+void TwoBodyDecayGen::printQ(std::string prefix, std::vector<std::deque<chBFpair> > QVec)
+{
+  DEBUG(prefix << "V size: " << QVec.size());
+  BOOST_FOREACH(std::deque<chBFpair> queue, QVec) {
+    printQ(prefix, queue);
+  }
+  return;
+}
 
 
 unsigned long long TwoBodyDecayGen::_count(0);
@@ -174,20 +195,20 @@ double TwoBodyDecayGen::get_brfr(unsigned chid)
 }
 
 
-void TwoBodyDecayGen::find_leaf_nodes(std::vector<std::deque<chBFpair> > brfrVec,
-				      std::deque<chBFpair> *brfrQ)
+void TwoBodyDecayGen::find_leaf_nodes(std::vector<std::deque<chBFpair> > &brfrVec,
+				      std::deque<chBFpair> &brfrQ)
 {
-  // for top level call
-  if (brfrQ == NULL) {
-    brfrQ = new std::deque<chBFpair>();
-  }
+  DEBUG("Passed Qptr: " << &brfrQ);
+  printQ("Passed ", brfrQ);
+  DEBUG("_dauchannels.size(): " << _dauchannels.size());
+  std::deque<chBFpair> brfrQcopy(brfrQ);
 
   // loop over channels
   for (unsigned chid = 0; chid < _dauchannels.size(); ++chid) {
-    brfrQ->push_back(std::make_pair(chid, this->get_brfr(chid))); // channel BF
-
+    // FIXME: copy not working, copying gibberish
     // need copy when both daughters are _not_ leaves
-    std::deque<chBFpair> brfrQcopy = *brfrQ;
+    brfrQ.push_back(std::make_pair(chid, this->get_brfr(chid))); // channel BF
+    DEBUG("Ch id: " << chid);
 
     unsigned leafcounter(0);
     // loop over daughters for each channel
@@ -199,13 +220,25 @@ void TwoBodyDecayGen::find_leaf_nodes(std::vector<std::deque<chBFpair> > brfrVec
 	dau->find_leaf_nodes(brfrVec, brfrQ);
       } else { // leaf branch
 	++leafcounter;
-	if (leafcounter == 2) continue;
-	// executed only when first branch is a leaf
-	brfrVec.push_back(*brfrQ); // end of traversal, save
-	brfrQ = &brfrQcopy;
+	DEBUG("leafcounter: " << leafcounter);
+      }
+      if (leafcounter == 2) { // leaf decay node
+	brfrVec.push_back(brfrQ);
+	// FIXME: probably this does not work
+	brfrQ = brfrQcopy;
+	DEBUG("Leaf node found!");
       }
     } // end daughter loop
   } // end channel loop
+
+  if (_dauchannels.empty()) { // leaf decay node
+    brfrVec.push_back(brfrQ);
+    DEBUG("Leaf node found!");
+  }
+
+  printQ("End ", brfrQ);
+
+  DEBUG("Vector size: " << brfrVec.size());
   return;
 }
 
@@ -229,7 +262,21 @@ double TwoBodyDecayGen::generate(TLorentzVector &momp,
 
   // propagate generate to daughters
   for (unsigned j = 0; j < NDAUS; ++j) {
+    DEBUG("_dauchannels size: " << _dauchannels.size());
+    if (_dauchannels.empty()) continue;
+    if (_dauchannels[ich].first.empty()) {
+      DEBUG("Empty vector!");
+      continue;
+    }
+    DEBUG("pointer: " << _dauchannels[ich].first[j]);
+    if (chQ.empty()) {
+      DEBUG("Channel Q empty!");
+      continue;
+    } else {
+      DEBUG("Channel Q size: " << chQ.size());
+    }
     if (_dauchannels[ich].first[j]) {
+      _dauchannels[ich].first[j]->print(4);
       evt_wt += _dauchannels[ich].first[j]->generate(particle_lvs[j+1],
 						     particle_lvs, chQ);
       evt_wt /= 2.0;
@@ -256,23 +303,35 @@ TTree* TwoBodyDecayGen::get_event_tree(unsigned nevents, TH1 *hmomp)
   std::cout << "Generating " << nevents << " events." << std::endl;
 
   TLorentzVector momp(0.0, 0.0, 4.0, _mommass);
-  unsigned eff_nevents(0);
 
   std::vector<std::deque<chBFpair> > brfrVec;
-  this->find_leaf_nodes(brfrVec);
+  std::deque<chBFpair> brfrQ;
+  // brfrQ.push_back(std::make_pair(1, 0.81));
+  DEBUG("Initial Qptr: " << &brfrQ);
+  this->find_leaf_nodes(brfrVec, brfrQ);
+  this->printQ("Final ", brfrVec);
 
   BOOST_FOREACH(std::deque<chBFpair> chQ, brfrVec) {
     double eff_brfr(1.0);
+    unsigned eff_nevents(0);
+
+    DEBUG("chQ size: " << chQ.size());
     BOOST_FOREACH(chBFpair ch, chQ) {
       eff_brfr *= ch.second;
+      DEBUG("Ch id: " << ch.first << ", BF: " << ch.second);
     }
 
     eff_nevents = eff_brfr * nevents;
+    DEBUG("Effective BF: " << eff_brfr << ", effective events: " << eff_nevents);
     for (unsigned i = 0; i < eff_nevents; ++i) {
       particle_lvs.clear();
       // generate event and fill tree
       momp.SetXYZM( 0.0, 0.0, hmomp->GetRandom(), _mommass);
       particle_lvs.push_back(momp);
+      if (chQ.empty()) {
+	DEBUG("Empty channel queue!");
+	continue;
+      }
       evt_wt = this->generate(momp, particle_lvs, chQ);
       if (evt_wt < 0) {
 	std::cout << "Decay not permitted by kinematics, skipping!"
