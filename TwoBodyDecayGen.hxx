@@ -137,11 +137,14 @@ public:
    *
    * This method traverses the decay tree and extracts the branching
    * fraction and the channel id from each node into a double-ended
-   * queue.  It stops the queue everytime a leaf branch is
-   * encountered.  The queue is then saved into a vector.  The vector
-   * will have an entry for each leaf branch or leaf decay node.  Note
-   * that a leaf decay node has two leaf branches, this is counted as
-   * one entry channel (single entry in the vector).
+   * queue.  It stops the queue everytime a leaf node is encountered.
+   * The queue is then saved into a vector.
+   *
+   * <i>Implementation:</i> Follow each daughter node, until a leaf
+   * node is found.  Return the depth of the recursive call, so in the
+   * current function scope 0, increment it by 1 as we go up the tree.
+   * Once a leaf node is found, branch off the search to the other
+   * daughters one level above (recursion level = 1).
    *
    *       (recursion depth)
    *
