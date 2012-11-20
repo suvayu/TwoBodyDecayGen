@@ -529,7 +529,8 @@ static unsigned long long&#160;</td><td class="memItemRight" valign="bottom"><a 
 </div><div class="memdoc">
 
 <p>Find leaf branches or decay nodes. </p>
-<p>This method traverses the decay tree and extracts the branching fraction and the channel id from each node into a double-ended queue. It stops the queue everytime a leaf branch is encountered. The queue is then saved into a vector. The vector will have an entry for each leaf branch or leaf decay node. Note that a leaf decay node has two leaf branches, this is counted as one entry channel (single entry in the vector). </p>
+<p>This method traverses the decay tree and extracts the branching fraction and the channel id from each node into a double-ended queue. It stops the queue everytime a leaf node is encountered. The queue is then saved into a vector.</p>
+<p><em>Implementation:</em> Follow each daughter node, until a leaf node is found. Return the depth of the recursive call, so in the current function scope 0, increment it by 1 as we go up the tree. Once a leaf node is found, branch off the search to the other daughters one level above (recursion level = 1). </p>
 <pre class="fragment">  (recursion depth)
 
   L3  - - -                     mother
@@ -728,7 +729,7 @@ static unsigned long long&#160;</td><td class="memItemRight" valign="bottom"><a 
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classTwoBodyDecayGen.html">TwoBodyDecayGen</a></li>
-    <li class="footer">Generated on Tue Nov 20 2012 20:59:58 for TwoBodyDecayGen by
+    <li class="footer">Generated on Tue Nov 20 2012 23:08:27 for TwoBodyDecayGen by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.1.1 </li>
   </ul>
