@@ -229,9 +229,8 @@ int TwoBodyDecayGen::find_leaf_nodes(std::vector<std::deque<chBFpair> > &brfrVec
 
       if (leafcounter == 2) { // leaf node
 	status = 0;
-	// // FIXME: Is a pop needed?  Can this be used to get the
-	// // pointer later?
-	// brfrQ.pop_back();
+	// Last element redundant, always (0, 1.0)
+	brfrQ.pop_back();
 	brfrVec.push_back(brfrQ);
       }
     } // end daughter loop
