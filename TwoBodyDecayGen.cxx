@@ -8,13 +8,17 @@
  *
  */
 
+// STL headers
 #include <iostream>
 #include <iomanip>
 
+// Boost headers
 #include <boost/foreach.hpp>
 
+// ROOT headers
 #include <TRandom3.h>
 
+// package headers
 #include "TwoBodyDecayGen.hxx"
 
 
@@ -34,7 +38,7 @@
  * Warning with a counter
  */
 
-#define WARNING(MSG)                                  \
+#define WARNING(MSG)  \
   std::cout << "WARNING: [" << std::setw(4) << std::setfill('0') << _count \
   << "] (" << __func__ << ") " << MSG << std::endl; \
   _count++;
@@ -45,7 +49,7 @@
  * Error message with a counter
  */
 
-#define ERROR(MSG)                                  \
+#define ERROR(MSG)  \
   std::cout << "ERROR: [" << std::setw(4) << std::setfill('0') << _count \
   << "] (" << __func__ << ") "	<< MSG << std::endl; \
   _count++;
@@ -152,7 +156,6 @@ bool TwoBodyDecayGen::add_decay_channel(double *masses, unsigned nparts,
 
   std::vector<double> dau1tree, dau2tree;
 
-  // FIXME: spurious ghost daughters for stable daughter
   const unsigned nodes = (nparts - 1) / 2;
   for (unsigned i = 1; i < nodes; ++i) {
     if (i % 2) {
@@ -297,36 +300,25 @@ TTree* TwoBodyDecayGen::get_event_tree(unsigned nevents, TH1 *hmomp)
 
   std::vector<std::deque<chBFpair> > brfrVec;
   std::deque<chBFpair> brfrQ;
-  // brfrQ.push_back(std::make_pair(1, 0.81));
-  DEBUG("Initial Qptr: " << &brfrQ);
   this->find_leaf_nodes(brfrVec, brfrQ);
-  this->_printQ("Final ", brfrVec);
 
   BOOST_FOREACH(std::deque<chBFpair> chQ, brfrVec) {
     double eff_brfr(1.0);
     unsigned eff_nevents(0);
-
-    DEBUG("chQ size: " << chQ.size());
     BOOST_FOREACH(chBFpair ch, chQ) {
       eff_brfr *= ch.second;
-      DEBUG("Ch id: " << ch.first << ", BF: " << ch.second);
     }
-
     eff_nevents = eff_brfr * nevents;
     DEBUG("Effective BF: " << eff_brfr << ", effective events: " << eff_nevents);
     for (unsigned i = 0; i < eff_nevents; ++i) {
       particle_lvs.clear();
+
       // generate event and fill tree
       momp.SetXYZM( 0.0, 0.0, hmomp->GetRandom(), _mommass);
       particle_lvs.push_back(momp);
-      if (chQ.empty()) {
-	DEBUG("Empty channel queue!");
-	continue;
-      }
       evt_wt = this->generate(momp, particle_lvs, chQ);
-      if (evt_wt < 0) {
-	std::cout << "Decay not permitted by kinematics, skipping!"
-		  << std::endl;
+      if (evt_wt <= 0) {
+	WARNING("Decay not permitted by kinematics, skipping!");
 	continue;
       }
       decaytree->Fill();

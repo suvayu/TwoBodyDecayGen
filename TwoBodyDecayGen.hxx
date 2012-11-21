@@ -11,10 +11,12 @@
 #ifndef TWOBODYDECAYGEN_HXX
 #define TWOBODYDECAYGEN_HXX
 
+// STL headers
 #include <string>
 #include <vector>
 #include <deque>
 
+// ROOT headers
 #include <TH1.h>
 #include <TTree.h>
 #include <TLorentzVector.h>
