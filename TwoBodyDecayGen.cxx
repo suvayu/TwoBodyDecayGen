@@ -244,8 +244,6 @@ double TwoBodyDecayGen::generate(TLorentzVector &momp,
 				 std::vector<TLorentzVector> &particle_lvs,
 				 std::deque<chBFpair> chQ)
 {
-  unsigned ich(chQ.front().first);
-  chQ.pop_front();
   // setup decay and generate
   if (not _generator.SetDecay(momp, NDAUS, _daumasses)) {
     return -1.0;
@@ -257,23 +255,19 @@ double TwoBodyDecayGen::generate(TLorentzVector &momp,
     particle_lvs.push_back(*(_generator.GetDecay(j)));
   }
 
+  if (chQ.empty()) { // at leaf node, return
+    return evt_wt;
+  }
+  // determine decay channel
+  unsigned ich(chQ.front().first);
+  chQ.pop_front();
+
+  // DEBUG("ich/_dauchannels size: " << ich + 1 << "/" << _dauchannels.size());
+
   // propagate generate to daughters
   for (unsigned j = 0; j < NDAUS; ++j) {
-    DEBUG("_dauchannels size: " << _dauchannels.size());
-    if (_dauchannels.empty()) continue;
-    if (_dauchannels[ich].first.empty()) {
-      DEBUG("Empty vector!");
-      continue;
-    }
-    DEBUG("pointer: " << _dauchannels[ich].first[j]);
-    if (chQ.empty()) {
-      DEBUG("Channel Q empty!");
-      continue;
-    } else {
-      DEBUG("Channel Q size: " << chQ.size());
-    }
+    // DEBUG("pointer: " << _dauchannels[ich].first[j]);
     if (_dauchannels[ich].first[j]) {
-      _dauchannels[ich].first[j]->print(4);
       evt_wt += _dauchannels[ich].first[j]->generate(particle_lvs[j+1],
 						     particle_lvs, chQ);
       evt_wt /= 2.0;
