@@ -21,7 +21,7 @@ libDecayGen.so: LDLIBS += -lstdc++ $(ROOTLIBS)
 # Binaries
 generator:	LDLIBS += -lstdc++ $(ROOTLIBS) -L./ -lDecayGen
 
-test:		LDLIBS += -lstdc++ $(ROOTLIBS)
+test:		LDLIBS += -lstdc++ $(ROOTLIBS) -L./ -lDecayGen
 
 testpartial:	LDLIBS += -lstdc++ $(ROOTLIBS) -L./ -lDecayGen
 
