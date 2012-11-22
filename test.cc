@@ -19,7 +19,7 @@ static const double BSMASS(5366.3), DSMASS(1968.49), KMASS(493.677),
   /*, RHOMASS(775.49), DSTMASS(2010.25), DSTMASS2(2460.1);*/
 
 
-int kfactorp(TTree *intree, TTree *outtree, std::string mode);
+int kfactorp(TTree *intree, TTree *outtree, std::string mode, std::string fext);
 
 void plotvar(TTree *tree, TH1 &hist, std::string var, int vidx=-1);
 
@@ -27,9 +27,14 @@ void plotvar(TTree *tree, TH1 &hist, std::string var, int vidx=-1);
 int main(int argc, char* argv[])
 {
   // program arguments
-  std::string mode;
-  if (argc == 2) {
+  std::string mode, fext;
+  if (argc >= 2) {
     mode = argv[1];
+    if (argc == 3) {
+      fext = argv[2];
+    } else {
+      fext = "png";
+    }
   } else {
     std::cout << "Not enough arguments!" << std::endl;
     return -1;
@@ -70,7 +75,7 @@ int main(int argc, char* argv[])
   legend->SetHeader("Bs momentum");
   legend->Draw();
 
-  fname = mode + "_Bs_mom_both.png";
+  fname = mode + "_Bs_mom_both." + fext;
   gPad->Update();
   gPad->Print(fname.c_str());
 
@@ -86,7 +91,7 @@ int main(int argc, char* argv[])
   legend->SetHeader("Dau1 momentum");
   legend->Draw();
 
-  fname = mode + "_dau1_mom_both.png";
+  fname = mode + "_dau1_mom_both." + fext;
   gPad->Update();
   gPad->Print(fname.c_str());
 
@@ -102,17 +107,17 @@ int main(int argc, char* argv[])
   legend->SetHeader("Dau2 momentum");
   legend->Draw();
 
-  fname = mode + "_dau2_mom_both.png";
+  fname = mode + "_dau2_mom_both." + fext;
   gPad->Update();
   gPad->Print(fname.c_str());
 
-  kfactorp(intree, outtree, mode);
+  kfactorp(intree, outtree, mode, fext);
 
   return 0;
 }
 
 
-int kfactorp(TTree *intree, TTree *outtree, std::string mode)
+int kfactorp(TTree *intree, TTree *outtree, std::string mode, std::string fext)
 {
   intree->ResetBranchAddresses();
   outtree->ResetBranchAddresses();
@@ -246,7 +251,7 @@ int kfactorp(TTree *intree, TTree *outtree, std::string mode)
   legend.SetLineColor(0);
 
   std::string fname;
-  fname = mode + "_kfactorm_both.png";
+  fname = mode + "_kfactorm_both." + fext;
   kfactortrum.Draw("hist");
   kfactorMCm.Draw("hist same");
   legend.SetHeader("k-factor (m)");
@@ -254,7 +259,7 @@ int kfactorp(TTree *intree, TTree *outtree, std::string mode)
   gPad->Update();
   gPad->Print(fname.c_str());
 
-  fname = mode + "_kfactorp_both.png";
+  fname = mode + "_kfactorp_both." + fext;
   kfactortrup.Draw("hist");
   kfactorMCp.Draw("hist same");
   legend.SetHeader("k-factor (p)");
@@ -262,7 +267,7 @@ int kfactorp(TTree *intree, TTree *outtree, std::string mode)
   gPad->Update();
   gPad->Print(fname.c_str());
 
-  fname = mode + "_kfactorpm_both.png";
+  fname = mode + "_kfactorpm_both." + fext;
   kfactortrupm.Draw("hist");
   kfactorMCpm.Draw("hist same");
   legend.SetHeader("k-factor (m/p)");

@@ -19,15 +19,20 @@ static const double BSMASS(5366.3), DSMASS(1968.49), KMASS(493.677),
   /*, RHOMASS(775.49), DSTMASS(2010.25), DSTMASS2(2460.1);*/
 
 
-int kfactorp(TTree *outtree, std::string mode);
+int kfactorp(TTree *outtree, std::string mode, std::string fext);
 
 
 int main(int argc, char* argv[])
 {
   // program arguments
-  std::string mode;
-  if (argc == 2) {
+  std::string mode, fext;
+  if (argc >= 2) {
     mode = argv[1];
+    if (argc == 3) {
+      fext = argv[2];
+    } else {
+      fext = "png";
+    }
   } else {
     std::cout << "Not enough arguments!" << std::endl;
     return -1;
@@ -45,7 +50,7 @@ int main(int argc, char* argv[])
   // B momentum distribution from MC
   TH1D Bsmomp("Bsmomp", "", 100, 0.0, 300.0);
 
-  fname = mode + "_Bs_mom_MC.png";
+  fname = mode + "_Bs_mom_MC." + fext;
   intree->Draw("1E-3*BsMom.P()>>Bsmomp");
   label->DrawLatex(0.6, 0.5, "B_{s} momentum (MC)");
   gPad->Update();
@@ -57,13 +62,13 @@ int main(int argc, char* argv[])
   TFile outfile(fname.c_str(), "read");
   TTree *outtree = dynamic_cast<TTree*>(outfile.Get("TwoBodyDecayGen_decaytree"));
 
-  kfactorp(outtree, mode);
+  kfactorp(outtree, mode, fext);
 
   return 0;
 }
 
 
-int kfactorp(TTree *outtree, std::string mode)
+int kfactorp(TTree *outtree, std::string mode, std::string fext)
 {
   std::string fname;
   std::vector<TLorentzVector> *particle_lvs = NULL;
@@ -107,19 +112,19 @@ int kfactorp(TTree *outtree, std::string mode)
 
   hkfactorm.Draw("hist");
   label->DrawLatex(0.4, 0.5, "k-factor (m)");
-  fname = mode + "_kfactorm_gen.png";
+  fname = mode + "_kfactorm_gen." + fext;
   gPad->Update();
   gPad->Print(fname.c_str());
 
   hkfactorp.Draw("hist");
   label->DrawLatex(0.4, 0.5, "k-factor (p)");
-  fname = mode + "_kfactorp_gen.png";
+  fname = mode + "_kfactorp_gen." + fext;
   gPad->Update();
   gPad->Print(fname.c_str());
 
   hkfactorpm.Draw("hist");
   label->DrawLatex(0.4, 0.5, "k-factor (m/p)");
-  fname = mode + "_kfactorpm_gen.png";
+  fname = mode + "_kfactorpm_gen." + fext;
   gPad->Update();
   gPad->Print(fname.c_str());
 
