@@ -19,7 +19,9 @@ static const double BSMASS(5366.3), DSMASS(1968.49), KMASS(493.677),
   /*, RHOMASS(775.49), DSTMASS(2010.25), DSTMASS2(2460.1);*/
 
 
-int kfactorp(TTree *intree, TTree *outtree);
+int kfactorp(TTree *intree, TTree *outtree, std::string mode);
+
+void plotvar(TTree *tree, TH1 &hist, std::string var, int vidx=-1);
 
 
 int main(int argc, char* argv[])
@@ -38,60 +40,83 @@ int main(int argc, char* argv[])
   TFile infile(fname.c_str(), "read");
   TTree *intree = dynamic_cast<TTree*>(infile.Get("ftree"));
 
-  TLatex *label = new TLatex();
-  label->SetTextSize(0.04);
-  label->SetNDC(true);
-
-  // B momentum distribution from MC
-  TH1D Bsmomp("Bsmomp", "", 100, 0.0, 300.0);
-  TH1D dau1momp("dau1momp", "", 100, 0.0, 300.0);
-  TH1D dau2momp("dau2momp", "", 100, 0.0, 300.0);
-
-  intree->Draw("1E-3*BsMom.P()>>Bsmomp");
-  label->DrawLatex(0.6, 0.5, "B_{s} momentum (MC)");
-  gPad->Update();
-  gPad->Print("Bs_mom_MC.png");
-
-  intree->Draw("1E-3*DsMom.P()>>dau1momp");
-  label->DrawLatex(0.6, 0.5, "dau1 momentum (MC)");
-  gPad->Update();
-  gPad->Print("dau1_mom_MC.png");
-
-  intree->Draw("1E-3*hMom.P()>>dau2momp");
-  label->DrawLatex(0.6, 0.5, "dau2 momentum (MC)");
-  gPad->Update();
-  gPad->Print("dau2_mom_MC.png");
-
-
   // read generated 4-vectors
   fname = "eventtree-" + mode + ".root";
   TFile outfile(fname.c_str(), "read");
   TTree *outtree = dynamic_cast<TTree*>(outfile.Get("TwoBodyDecayGen_decaytree"));
 
-  // generated B momentum distribution
-  outtree->Draw("particle_lvs[0].P()>>Bsmomp");
-  label->DrawLatex(0.6, 0.5, "B_{s} momentum (gen)");
-  gPad->Update();
-  gPad->Print("Bs_mom_gen.png");
+  // B momentum distribution from MC
+  TH1D hMC("hMC", "", 100, 0.0, 300.0);
+  TH1D hgen("hgen", "", 100, 0.0, 300.0);
 
-  outtree->Draw("particle_lvs[1].P()>>dau1momp");
-  label->DrawLatex(0.6, 0.5, "dau1 momentum (gen)");
-  gPad->Update();
-  gPad->Print("dau1_mom_gen.png");
+  hMC.SetLineColor(kAzure);
+  hgen.SetLineColor(kRed);
 
-  outtree->Draw("particle_lvs[2].P()>>dau2momp");
-  label->DrawLatex(0.6, 0.5, "dau2 momentum (gen)");
-  gPad->Update();
-  gPad->Print("dau2_mom_gen.png");
+  TLatex *label = new TLatex();
+  label->SetTextSize(0.04);
+  label->SetNDC(true);
 
-  kfactorp(intree, outtree);
+  TLegend *legend = new TLegend(0.6, 0.65, 0.85, 0.45);
+  legend->AddEntry(&hMC, "Monte Carlo", "l");
+  legend->AddEntry(&hgen, "Generated", "l");
+  legend->SetFillColor(0);
+  legend->SetLineColor(0);
+
+  plotvar(intree, hMC, "BsMom");
+  plotvar(outtree, hgen, "particle_lvs", 0);
+  hgen.Draw("hist");
+  hMC.Draw("hist same");
+
+  legend->SetHeader("Bs momentum");
+  legend->Draw();
+
+  fname = mode + "_Bs_mom_both.png";
+  gPad->Update();
+  gPad->Print(fname.c_str());
+
+  // reset histograms
+  hMC.Reset("icesm");
+  hgen.Reset("icesm");
+
+  plotvar(intree, hMC, "DsMom");
+  plotvar(outtree, hgen, "particle_lvs", 1);
+  hMC.Draw("hist");
+  hgen.Draw("hist same");
+
+  legend->SetHeader("Dau1 momentum");
+  legend->Draw();
+
+  fname = mode + "_dau1_mom_both.png";
+  gPad->Update();
+  gPad->Print(fname.c_str());
+
+  // reset histograms
+  hMC.Reset("icesm");
+  hgen.Reset("icesm");
+
+  plotvar(intree, hMC, "hMom");
+  plotvar(outtree, hgen, "particle_lvs", 2);
+  hMC.Draw("hist");
+  hgen.Draw("hist same");
+
+  legend->SetHeader("Dau2 momentum");
+  legend->Draw();
+
+  fname = mode + "_dau2_mom_both.png";
+  gPad->Update();
+  gPad->Print(fname.c_str());
+
+  kfactorp(intree, outtree, mode);
 
   return 0;
 }
 
 
-int kfactorp(TTree *intree, TTree *outtree)
+int kfactorp(TTree *intree, TTree *outtree, std::string mode)
 {
+  intree->ResetBranchAddresses();
+  outtree->ResetBranchAddresses();
+
   TLorentzVector *tru_BsMom = NULL;
   TLorentzVector *tru_hMom = NULL;
   TLorentzVector *tru_DsMom = NULL;
@@ -103,7 +128,9 @@ int kfactorp(TTree *intree, TTree *outtree)
 
   long ientries(intree->GetEntries());
 
-  TH1D kfactorMC("kfactorMC", "", 1000, 0.9, 1.1);
+  TH1D kfactorMCm("kfactorMCm", "", 1000, 0.9, 1.1);
+  TH1D kfactorMCp("kfactorMCp", "", 1000, 0.9, 1.1);
+  TH1D kfactorMCpm("kfactorMCpm", "", 1000, 0.9, 1.1);
 
   // TLatex *label = new TLatex();
   // label->SetTextSize(0.04);
@@ -123,7 +150,9 @@ int kfactorp(TTree *intree, TTree *outtree)
     kfactorm = tru_BsMom->M() / Bs_rec.M();
     kfactorpm = kfactorp * kfactorm;
 
-    kfactorMC.Fill(kfactorpm);
+    kfactorMCm.Fill(kfactorm);
+    kfactorMCp.Fill(kfactorp);
+    kfactorMCpm.Fill(kfactorpm);
   }
 
   std::vector<TLorentzVector> *particle_lvs = NULL;
@@ -136,8 +165,10 @@ int kfactorp(TTree *intree, TTree *outtree)
   long oentries(outtree->GetEntries());
 
   // kfactor.Reset("ICESM");
-  TH1D kfactortru("kfactortru", "", 1000, 0.9, 1.1);
-  TH1D kfactortruf("kfactortruf", "", 1000, 0.9, 1.1);
+  TH1D kfactortrum("kfactortrum", "", 1000, 0.85, 1.05);
+  TH1D kfactortrup("kfactortrup", "", 1000, 0.85, 1.05);
+  TH1D kfactortrupm("kfactortrupm", "", 1000, 0.85, 1.05);
+  TH1D kfactortruf("kfactortruf", "", 1000, 0.85, 1.05);
 
   for (unsigned i = 0; i < oentries; ++i) {
     outtree->GetEntry(i);
@@ -149,7 +180,9 @@ int kfactorp(TTree *intree, TTree *outtree)
     kfactorm = (*particle_lvs)[0].M() / Bs_rec.M();
     kfactorpm = kfactorp * kfactorm;
 
-    kfactortru.Fill(kfactorm);
+    kfactortrum.Fill(kfactorm);
+    kfactortrup.Fill(kfactorp);
+    kfactortrupm.Fill(kfactorpm);
 
     // 10s of keV
     volatile int iBs[3] = {int((*particle_lvs)[0].X()*1E5), int((*particle_lvs)[0].Y()*1E5),
@@ -196,38 +229,83 @@ int kfactorp(TTree *intree, TTree *outtree)
     kfactortruf.Fill(kfactorm);
   }
 
-  // kfactor.Draw("hist");
-  // label->DrawLatex(0.6, 0.5, "k-factor (MC)");
-  // gPad->Update();
-  // gPad->Print("kfactor_MC.png");
-  // kfactor.Print("all");
+  kfactorMCm.SetLineColor(kAzure);
+  kfactorMCp.SetLineColor(kAzure);
+  kfactorMCpm.SetLineColor(kAzure);
 
-  // kfactor.Draw("hist");
-  // label->DrawLatex(0.6, 0.5, "k-factor (gen)");
-  // gPad->Update();
-  // gPad->Print("kfactor_gen.png");
+  kfactortrum.SetLineColor(kRed);
+  kfactortrup.SetLineColor(kRed);
+  kfactortrupm.SetLineColor(kRed);
 
-  kfactorMC.SetLineColor(kAzure);
-  kfactortru.SetLineColor(kRed);
   kfactortruf.SetLineColor(kGreen);
 
-  kfactorMC.Draw("hist ");
-  kfactortru.Draw("hist same");
-
-  TLegend legend(0.6, 0.6, 0.85, 0.4);
-  legend.AddEntry(&kfactorMC, "Monte Carlo", "l");
-  legend.AddEntry(&kfactortru, "Generated", "l");
+  TLegend legend(0.2, 0.6, 0.45, 0.4);
+  legend.AddEntry(&kfactorMCpm, "Monte Carlo", "l");
+  legend.AddEntry(&kfactortrupm, "Generated", "l");
   legend.SetFillColor(0);
   legend.SetLineColor(0);
+
+  std::string fname;
+  fname = mode + "_kfactorm_both.png";
+  kfactortrum.Draw("hist");
+  kfactorMCm.Draw("hist same");
+  legend.SetHeader("k-factor (m)");
   legend.Draw();
   gPad->Update();
-  gPad->Print("kfactor_both.png");
+  gPad->Print(fname.c_str());
 
-  TFile hdump("hdump.root", "update");
-  hdump.WriteTObject(&kfactorMC, NULL, "WriteDelete");
-  hdump.WriteTObject(&kfactortru, NULL, "WriteDelete");
+  fname = mode + "_kfactorp_both.png";
+  kfactortrup.Draw("hist");
+  kfactorMCp.Draw("hist same");
+  legend.SetHeader("k-factor (p)");
+  legend.Draw();
+  gPad->Update();
+  gPad->Print(fname.c_str());
+
+  fname = mode + "_kfactorpm_both.png";
+  kfactortrupm.Draw("hist");
+  kfactorMCpm.Draw("hist same");
+  legend.SetHeader("k-factor (m/p)");
+  legend.Draw();
+  gPad->Update();
+  gPad->Print(fname.c_str());
+
+  fname = "hdump-" + mode + ".root";
+  TFile hdump(fname.c_str(), "update");
+  hdump.WriteTObject(&kfactorMCm, NULL, "WriteDelete");
+  hdump.WriteTObject(&kfactorMCp, NULL, "WriteDelete");
+  hdump.WriteTObject(&kfactorMCpm, NULL, "WriteDelete");
+  hdump.WriteTObject(&kfactortrum, NULL, "WriteDelete");
+  hdump.WriteTObject(&kfactortrup, NULL, "WriteDelete");
+  hdump.WriteTObject(&kfactortrupm, NULL, "WriteDelete");
   hdump.WriteTObject(&kfactortruf, NULL, "WriteDelete");
   hdump.Close();
 
   return 0;
+}
+
+
+void plotvar(TTree *tree, TH1 &hist, std::string var, int vidx)
+{
+  tree->ResetBranchAddresses();
+  TLorentzVector *lv = NULL;
+  std::vector<TLorentzVector> *particle_lvs = NULL;
+
+  if (vidx < 0) {
+    tree->SetBranchAddress(var.c_str(), &lv);
+  } else {
+    tree->SetBranchAddress(var.c_str(), &particle_lvs);
+  }
+
+  long nentries(tree->GetEntries());
+  for (unsigned i = 0; i < nentries; ++i) {
+    tree->GetEntry(i);
+    if (vidx < 0) {
+      hist.Fill(1E-3 * lv->P());
+    } else {
+      hist.Fill((*particle_lvs)[vidx].P());
+    }
+  }
+
+  return;
 }
