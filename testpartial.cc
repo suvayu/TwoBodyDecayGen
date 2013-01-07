@@ -120,19 +120,23 @@ int kfactorp(TTree *outtree, TTree *MCtree, std::string mode, std::string fext)
 
   // dumped tree
   MCtree->SetBranchAddress("kfactor", &kfactorpm);
+  MCtree->SetBranchAddress("kfactorm", &kfactorm);
   MCtree->SetBranchAddress("kfactorp", &kfactorp);
 
   oentries = MCtree->GetEntries();
 
   TH1D hMCkfactorp("hMCkfactorp", "", 100, 0.4, 1.2);
+  TH1D hMCkfactorm("hMCkfactorm", "", 100, 0.4, 1.2);
   TH1D hMCkfactorpm("hMCkfactorpm", "", 100, 0.4, 1.2);
 
   hMCkfactorp.SetLineColor(kAzure);
+  hMCkfactorm.SetLineColor(kAzure);
   hMCkfactorpm.SetLineColor(kAzure);
 
   for (unsigned i = 0; i < oentries; ++i) {
     MCtree->GetEntry(i);
     hMCkfactorp.Fill(kfactorp);
+    hMCkfactorm.Fill(kfactorm);
     hMCkfactorpm.Fill(kfactorpm);
   }
 
@@ -146,9 +150,10 @@ int kfactorp(TTree *outtree, TTree *MCtree, std::string mode, std::string fext)
   legend.SetFillColor(0);
   legend.SetLineColor(0);
 
-  hkfactorm.Draw("hist");
+  hMCkfactorm.Draw("hist");
+  hkfactorm.Draw("hist same");
   legend.SetHeader("k-factor (m)");
-  fname = mode + "_kfactorm_gen." + fext;
+  fname = mode + "_kfactorm_both." + fext;
   legend.Draw();
   gPad->Update();
   gPad->Print(fname.c_str());
@@ -175,6 +180,7 @@ int kfactorp(TTree *outtree, TTree *MCtree, std::string mode, std::string fext)
   hdump.WriteTObject(&hkfactorp, NULL, "WriteDelete");
   hdump.WriteTObject(&hkfactorpm, NULL, "WriteDelete");
   hdump.WriteTObject(&hMCkfactorp, NULL, "WriteDelete");
+  hdump.WriteTObject(&hMCkfactorm, NULL, "WriteDelete");
   hdump.WriteTObject(&hMCkfactorpm, NULL, "WriteDelete");
   hdump.Close();
 
