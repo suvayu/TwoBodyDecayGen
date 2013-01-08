@@ -154,6 +154,10 @@ bool TwoBodyDecayGen::add_decay_channel(double *masses, unsigned nparts,
 	    " Expect the unexpected!");
   }
 
+  if (nparts > 3) {
+    WARNING("There has to be 1< decay node.");
+  }
+
   std::vector<double> dau1tree, dau2tree;
 
   const unsigned nodes = (nparts - 1) / 2;
