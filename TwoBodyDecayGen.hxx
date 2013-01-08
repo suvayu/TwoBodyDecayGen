@@ -189,11 +189,12 @@ public:
    * Generate arbitrary number of events
    *
    * @param nevents Number of events to generate
-   * @param hmomp Histogram template for 3-momentum of the mother mother particle
+   * @param hmomp Template histogram for 3-momentum of the mother particle
+   * @param hmomn Template histogram for pseudorapidity(η) of the mother particle
    *
    * @return Generated event tree
    */
-  TTree* get_event_tree(unsigned nevents, TH1 *hmomp);
+  TTree* get_event_tree(unsigned nevents, TH1 *hmomp, TH1 *hmomn=NULL);
 
   /**
    * Print decay tree

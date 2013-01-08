@@ -55,6 +55,10 @@ int main(int argc, char* argv[])
   intree->Draw("1E-3*BsMom.P()>>Bsmomp");
   gPad->Print("Bs_mom_template.png");
 
+  TH1D Bsmomn("Bsmomn", "", 100, 1.0, 6.0);
+  intree->Draw("BsMom.Eta()>>Bsmomn");
+  gPad->Print("Bs_eta_template.png");
+
   // ROOT file dump
   fname = "eventtree-" + mode + ".root";
   TFile *file = new TFile(fname.c_str(), "recreate");
@@ -103,7 +107,7 @@ int main(int argc, char* argv[])
   generator.print();
 
   // generate, print summary and dump to ROOT file
-  TTree* eventtree = generator.get_event_tree(nevents, &Bsmomp);
+  TTree* eventtree = generator.get_event_tree(nevents, &Bsmomp, &Bsmomn);
   eventtree->Print("all");
   file->WriteTObject(eventtree);
   file->Close();

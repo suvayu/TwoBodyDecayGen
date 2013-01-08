@@ -11,6 +11,7 @@
 // STL headers
 #include <iostream>
 #include <iomanip>
+#include <cmath>
 
 // Boost headers
 #include <boost/foreach.hpp>
@@ -285,7 +286,7 @@ double TwoBodyDecayGen::generate(TLorentzVector &momp,
 }
 
 
-TTree* TwoBodyDecayGen::get_event_tree(unsigned nevents, TH1 *hmomp)
+TTree* TwoBodyDecayGen::get_event_tree(unsigned nevents, TH1 *hmomp, TH1 *hmomn)
 {
   std::vector<TLorentzVector> particle_lvs;
   double evt_wt(1.0);
@@ -318,7 +319,14 @@ TTree* TwoBodyDecayGen::get_event_tree(unsigned nevents, TH1 *hmomp)
       particle_lvs.clear();
 
       // generate event and fill tree
-      momp.SetXYZM( 0.0, 0.0, hmomp->GetRandom(), _mommass);
+      if (hmomn) {
+	double eta(hmomn->GetRandom());
+	double pt(hmomp->GetRandom() / std::cosh(eta));
+	double phi(0.0);	// get random ∈ (-π, π]
+	momp.SetPtEtaPhiM( pt, eta, phi, _mommass);
+      } else {
+	momp.SetXYZM( 0.0, 0.0, hmomp->GetRandom(), _mommass);
+      }
       particle_lvs.push_back(momp);
       evt_wt = this->generate(momp, particle_lvs, chQ);
       if (evt_wt <= 0) {
