@@ -7,21 +7,21 @@ BINSRC = generator.cc test.cc testpartial.cc
 
 include mk/Rules.mk
 
-SRCS += $(LIBSRC)
-SRCS += $(BINSRC)
+# Common
+$(TARGETS):	LDLIBS += -lstdc++ $(ROOTLIBS)
 
+# Libraries
 stdvectorDict.cxx:	stdvectorInclude.h stdvectorLinkDef.h
 
-libDecayGen.so: $(patsubst %.cxx,%.os,$(filter-out $(BINSRC),$(SRCS)))
-libDecayGen.so: LDLIBS += -lstdc++ $(ROOTLIBS)
+libDecayGen.so: $(patsubst %.cxx,%.os,$(filter-out %.cc,$(ccsrc)))
 
 
 # Binaries
-generator:	LDLIBS += -lstdc++ $(ROOTLIBS) -L./ -lDecayGen
+generator:	LDLIBS += -L./ -lDecayGen
 
-test:		LDLIBS += -lstdc++ $(ROOTLIBS) -L./ -lDecayGen
+test:		LDLIBS += -L./ -lDecayGen
 
-testpartial:	LDLIBS += -lstdc++ $(ROOTLIBS) -L./ -lDecayGen
+testpartial:	LDLIBS += -L./ -lDecayGen
 
 
 # Documentation
