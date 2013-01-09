@@ -11,6 +11,12 @@
 // STL headers
 #include <iostream>
 #include <iomanip>
+
+/**
+ * \def _USE_MATH_DEFINES
+ * Enable definitions from cmath (e.g. mathematical constants)
+ */
+#define _USE_MATH_DEFINES
 #include <cmath>
 
 // Boost headers
@@ -322,7 +328,7 @@ TTree* TwoBodyDecayGen::get_event_tree(unsigned nevents, TH1 *hmomp, TH1 *hmomn)
       if (hmomn) {
 	double eta(hmomn->GetRandom());
 	double pt(hmomp->GetRandom() / std::cosh(eta));
-	double phi(0.0);	// get random ∈ (-π, π]
+	double phi(M_PI * gRandom->Rndm());	// get random ∈ (-π, π]
 	momp.SetPtEtaPhiM( pt, eta, phi, _mommass);
       } else {
 	momp.SetXYZM( 0.0, 0.0, hmomp->GetRandom(), _mommass);
