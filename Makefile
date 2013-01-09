@@ -10,9 +10,7 @@ include mk/Rules.mk
 SRCS += $(LIBSRC)
 SRCS += $(BINSRC)
 
-stdvectorDict.cxx:	stdvectorLinkDef.h
-	rootcint -f $@ -c -p $^
-	grep include $^ > tmpdict && cat $@ >> tmpdict && mv tmpdict $@
+stdvectorDict.cxx:	stdvectorInclude.h stdvectorLinkDef.h
 
 libDecayGen.so: $(patsubst %.cxx,%.os,$(filter-out $(BINSRC),$(SRCS)))
 libDecayGen.so: LDLIBS += -lstdc++ $(ROOTLIBS)
