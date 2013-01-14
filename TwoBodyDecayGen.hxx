@@ -186,6 +186,15 @@ public:
 		  std::deque<chBFpair> chQ);
 
   /**
+   * Return if the particle is in LHCb detector acceptance
+   *
+   * @param part_lv Particle 4-vector
+   *
+   * @return Inside LHCb acceptance or not
+   */
+  bool lv_in_LHCb(TLorentzVector &part_lv);
+
+  /**
    * Generate arbitrary number of events
    *
    * @param nevents Number of events to generate

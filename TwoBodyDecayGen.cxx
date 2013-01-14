@@ -270,7 +270,12 @@ double TwoBodyDecayGen::generate(TLorentzVector &momp,
   }
 
   if (chQ.empty()) { // at leaf node, return
-    return evt_wt;
+    // TODO: check if daughters are inside LHCb detector acceptance
+    if (lv_in_LHCb(particle_lvs.back())) {
+      return evt_wt;
+    } else {
+      return -100;
+    }
   }
   // determine decay channel
   unsigned ich(chQ.front().first);
@@ -282,13 +287,39 @@ double TwoBodyDecayGen::generate(TLorentzVector &momp,
   for (unsigned j = 0; j < NDAUS; ++j) {
     // DEBUG("pointer: " << _dauchannels[ich].first[j]);
     if (_dauchannels[ich].first[j]) {
-      evt_wt += _dauchannels[ich].first[j]->generate(particle_lvs[j+1],
-						     particle_lvs, chQ);
-      evt_wt /= 2.0;
+      // FIXME: Check for -ve weights, and propagate appropriately
+      double wt = _dauchannels[ich].first[j]->generate(particle_lvs[j+1],
+						       particle_lvs, chQ);
+      if (0.0 < wt) {
+	evt_wt += wt;
+	evt_wt /= 2.0;
+      } else {
+	// DEBUG("Daughter outside LHCb acceptance!");
+	return wt;
+      }
     }
   } // FIXME: the handling of weights is probably wrong
 
   return evt_wt;
+}
+
+
+bool TwoBodyDecayGen::lv_in_LHCb(TLorentzVector &part_lv)
+{
+  // - x-z plane: 10 - 300 mrad
+  // - y-z plane: 10 - 250 mrad
+  const double xz_slope_lo(std::tan(1E-2)), xz_slope_hi(std::tan(3E-1)),
+    yz_slope_lo(std::tan(1E-2)), yz_slope_hi(std::tan(2.5E-1));
+
+  double px(part_lv.Px()), py(part_lv.Py()), pz(part_lv.Pz());
+  double xz_slope(std::fabs(px/pz)), yz_slope(std::fabs(py/pz));
+
+  if (xz_slope_lo < xz_slope and xz_slope < xz_slope_hi and
+      yz_slope_lo < yz_slope and yz_slope < yz_slope_hi) {
+    return true;
+  }
+
+  return false;
 }
 
 
@@ -321,14 +352,16 @@ TTree* TwoBodyDecayGen::get_event_tree(unsigned nevents, TH1 *hmomp, TH1 *hmomn)
     }
     eff_nevents = eff_brfr * nevents;
     DEBUG("Effective BF: " << eff_brfr << ", effective events: " << eff_nevents);
-    for (unsigned i = 0; i < eff_nevents; ++i) {
+
+    unsigned evt(0);
+    while (evt < eff_nevents) {
       particle_lvs.clear();
 
       // generate event and fill tree
       if (hmomn) {
 	double eta(hmomn->GetRandom());
 	double pt(hmomp->GetRandom() / std::cosh(eta));
-	double phi(M_PI * gRandom->Rndm());	// get random ∈ (-π, π]
+	double phi(2 * M_PI * gRandom->Rndm());	// get random ∈ [0, 2π)
 	momp.SetPtEtaPhiM( pt, eta, phi, _mommass);
       } else {
 	momp.SetXYZM( 0.0, 0.0, hmomp->GetRandom(), _mommass);
@@ -336,10 +369,11 @@ TTree* TwoBodyDecayGen::get_event_tree(unsigned nevents, TH1 *hmomp, TH1 *hmomn)
       particle_lvs.push_back(momp);
       evt_wt = this->generate(momp, particle_lvs, chQ);
       if (evt_wt <= 0) {
-	WARNING("Decay not permitted by kinematics, skipping!");
+	// WARNING("Decay not permitted by kinematics, skipping!");
 	continue;
       }
       decaytree->Fill();
+      evt++;
     } // end of loop over events per leaf branch/decay node
   }   // end of loop over leaves
 
