@@ -52,11 +52,11 @@ int main(int argc, char* argv[])
 
   // make dataset from histogram
   TH1D Bsmomp("Bsmomp", "", 100, 0.0, 300.0);
-  intree->Draw("1E-3*BsMom.P()>>Bsmomp");
+  intree->Draw("1E-3*tru_BsMom.P()>>Bsmomp");
   gPad->Print("Bs_mom_template.png");
 
   TH1D Bsmomn("Bsmomn", "", 100, 1.0, 6.0);
-  intree->Draw("BsMom.Eta()>>Bsmomn");
+  intree->Draw("tru_BsMom.Eta()>>Bsmomn");
   gPad->Print("Bs_eta_template.png");
 
   // ROOT file dump
